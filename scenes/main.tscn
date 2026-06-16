@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dohdfo3is8htf"]
+
+[ext_resource type="PackedScene" uid="uid://yvgiwgrlqqvi" path="res://scenes/lab.tscn" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://da88ngh5erprd" path="res://scenes/player.tscn" id="2_0wfyh"]
+
+[node name="Main" type="Node" unique_id=1810310620]
+
+[node name="TileMap" parent="." unique_id=575717987 instance=ExtResource("1_o5qli")]
+
+[node name="Player" parent="." unique_id=1883848433 instance=ExtResource("2_0wfyh")]
+position = Vector2(-6, -29)
+scale = Vector2(3, 3)
+collision_layer = 2
+collision_mask = 7
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1512592516]
+position = Vector2(0, 5)
