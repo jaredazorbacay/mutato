@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cu63pfw0yla1j"]
 
-[ext_resource type="Texture2D" uid="uid://balivt2y55s53" path="res://assets/sprites/whip_sheet.png" id="1_h8dkq"]
+[ext_resource type="Texture2D" uid="uid://bym3oxi0l3mkk" path="res://assets/sprites/whip_sheet.png" id="1_h8dkq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8ncxm"]
 atlas = ExtResource("1_h8dkq")
@@ -76,6 +76,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h8dkq"]
+size = Vector2(172, 20)
+
 [node name="Whip" type="Node2D" unique_id=1317637477]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=397865893]
@@ -84,3 +87,11 @@ sprite_frames = SubResource("SpriteFrames_p2k1x")
 animation = &"whip"
 frame = 9
 frame_progress = 1.0
+
+[node name="Area2D" type="Area2D" parent="." unique_id=380815961]
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=600844380]
+position = Vector2(86, 1)
+shape = SubResource("RectangleShape2D_h8dkq")

@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://dhbff0ki7t4pj"]
+
+[ext_resource type="Script" uid="uid://vha2qofyh5bp" path="res://scripts/enemy/scientist.gd" id="1_bcf38"]
+[ext_resource type="Texture2D" uid="uid://b0tpjjx17fgn8" path="res://assets/sprites/LabNPCs.png" id="2_8y8wj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_md0e3"]
+atlas = ExtResource("2_8y8wj")
+region = Rect2(200, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ra3w"]
+atlas = ExtResource("2_8y8wj")
+region = Rect2(232, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5uy6h"]
+atlas = ExtResource("2_8y8wj")
+region = Rect2(264, 0, 32, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8tegq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_md0e3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4ra3w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5uy6h")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c4w8v"]
+radius = 7.0
+
+[node name="Scientist" type="CharacterBody2D" unique_id=1749521585]
+position = Vector2(0, -21)
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_bcf38")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1525215028]
+sprite_frames = SubResource("SpriteFrames_8tegq")
+frame_progress = 0.0050569377
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=166521727]
+position = Vector2(-1, 7)
+shape = SubResource("CapsuleShape2D_c4w8v")

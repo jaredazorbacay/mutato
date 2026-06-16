@@ -4,12 +4,14 @@ var speed = 700
 var isAttacking : bool
 var xDirection : String
 var yDirection : String
+var cooldown: float
 
 func _ready() -> void:
 	$AnimatedSprite2D.speed_scale = 1.75
 	isAttacking = false
 	xDirection = ""
 	yDirection = "D"
+	cooldown = 0
 	
 func get_input():
 	var input_direct = Input.get_vector("left", "right", "up", "down")
@@ -17,21 +19,8 @@ func get_input():
 	
 	
 func _process(delta: float) -> void:
-	
-	#//mouse-based direction	
-	#var mouse = get_local_mouse_position()
-	#var angle = snappedf(mouse.angle(), PI/4) / (PI/4)
-	#angle = wrapi(int(angle), 0, 8)
-	#
-	#if (velocity.length() != 0):
-		#$AnimatedSprite2D.animation = "run" + str(angle)
-	#else:
-		#$AnimatedSprite2D.animation = "run" + str(angle)
-		
-		
-		
+
 	#//Movement based direction
-	print(isAttacking)
 	if (!isAttacking and velocity.length() !=0):
 		if velocity.x > 0:
 			xDirection = "R"
@@ -66,10 +55,16 @@ func _input(event: InputEvent) -> void:
 
 func whip_attack(angle) -> void:
 	
+	if (cooldown > 0):
+		return
+	cooldown = 0.5
 	$Whip.rotation = angle
 	
-	isAttacking = true
+	var bodies: Array = $Whip/Area2D.get_overlapping_bodies()
+	for body in bodies:
+		body.take_damage(50)
 	
+	isAttacking = true
 	#//mouse-based direction	
 	var mouse = get_local_mouse_position()
 	var cropped_angle = snappedf(mouse.angle(), PI/4) / (PI/4)
@@ -81,12 +76,12 @@ func whip_attack(angle) -> void:
 	else:
 		$Whip.z_index = -1
 	$Whip/AnimatedSprite2D.play("whip")
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.2).timeout
 	isAttacking = false
+	run_cooldown()
 	
 	
 #********* UTILS **********#
-
 func set_face_index_by_angle(angle) -> void:
 	
 	match angle:
@@ -114,3 +109,8 @@ func set_face_index_by_angle(angle) -> void:
 		7:
 			xDirection = "R"
 			yDirection = "U"
+
+func run_cooldown():
+	while (cooldown > 0):
+		await get_tree().create_timer(0.5).timeout
+		cooldown -= 0.5
