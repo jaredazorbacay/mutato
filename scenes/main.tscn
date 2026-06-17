@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dohdfo3is8htf"]
 
+[ext_resource type="Script" uid="uid://ckhkey6cdv04n" path="res://scripts/game.gd" id="1_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://da88ngh5erprd" path="res://scenes/player.tscn" id="2_0wfyh"]
-[ext_resource type="PackedScene" uid="uid://dhbff0ki7t4pj" path="res://scenes/scientist.tscn" id="3_sugp2"]
 [ext_resource type="Texture2D" uid="uid://citbv4mx3psp" path="res://assets/sprites/Tile-Set.png" id="4_jyhfs"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tbgi4"]
@@ -81,6 +81,7 @@ physics_layer_0/collision_layer = 1
 sources/4 = SubResource("TileSetAtlasSource_tbgi4")
 
 [node name="Main" type="Node" unique_id=1810310620]
+script = ExtResource("1_jyhfs")
 
 [node name="TileMap2" type="TileMap" parent="." unique_id=2028278999]
 tile_set = SubResource("TileSet_tefeu")
@@ -97,7 +98,3 @@ collision_mask = 7
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1512592516]
 position = Vector2(0, 5)
-
-[node name="Enemy" parent="." unique_id=1749521585 instance=ExtResource("3_sugp2")]
-position = Vector2(-590, 174)
-scale = Vector2(4, 4)

@@ -86,7 +86,6 @@ func whip_attack(angle) -> void:
 
 func take_damage(damage: int) -> void:
 	health -= damage
-	print("hit")
 	if (health <= 0):
 		queue_free()
 	

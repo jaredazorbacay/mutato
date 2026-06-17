@@ -32,8 +32,6 @@ func fire(direct, spd, dmg, quadrant):
 			move_local_y(-10)
 			
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	print(random_offset)
 	if (fired):
 		velocity = (direction.normalized() + random_offset) * speed
 		move_and_slide()
