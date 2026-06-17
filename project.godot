@@ -15,9 +15,9 @@ run/main_scene="uid://dohdfo3is8htf"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
 
-[global_group]
+[dotnet]
 
-player=""
+project/assembly_name="Mutato"
 
 [input]
 
