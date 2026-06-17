@@ -379,7 +379,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_oprun"]
 radius = 9.0
 
-[node name="Player" type="CharacterBody2D" unique_id=1883848433]
+[node name="Player" type="CharacterBody2D" unique_id=1883848433 groups=["player"]]
 z_index = 10
 scale = Vector2(5, 5)
 script = ExtResource("1_g2els")
