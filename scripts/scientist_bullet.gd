@@ -5,14 +5,19 @@ var direction
 var speed : float
 var fired = false
 var damage : int
+var random_offset: Vector2
 
 func fire(direct, spd, dmg, quadrant):
 	direction = direct
 	speed = spd
 	fired = true
 	damage = dmg
+	random_offset = Vector2(
+			randf_range(-0.1, 0.1),
+			randf_range(-0.1, 0.1)
+	)
 	$AnimatedSprite2D.play()
-	match quadrant:
+	match quadrant: # initial position of bullet based on scientist face
 		0:
 			move_local_x(20)
 			move_local_y(25)
@@ -25,10 +30,12 @@ func fire(direct, spd, dmg, quadrant):
 		3: 
 			move_local_x(-20)
 			move_local_y(-10)
+			
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
+	print(random_offset)
 	if (fired):
-		velocity = direction.normalized() * speed
+		velocity = (direction.normalized() + random_offset) * speed
 		move_and_slide()
 		if scale.x < 2:
 			scale.x += 0.9 * delta
