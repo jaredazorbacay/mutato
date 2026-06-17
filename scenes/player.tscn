@@ -376,12 +376,11 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_oprun"]
-radius = 9.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkch"]
 
 [node name="Player" type="CharacterBody2D" unique_id=1883848433 groups=["player"]]
 z_index = 10
-scale = Vector2(5, 5)
+scale = Vector2(3, 3)
 script = ExtResource("1_g2els")
 
 [node name="Shadow" type="Sprite2D" parent="." unique_id=1109293011]
@@ -395,8 +394,8 @@ sprite_frames = SubResource("SpriteFrames_f1ej7")
 animation = &"runUR"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1354392781]
-position = Vector2(0, 15)
-shape = SubResource("CircleShape2D_oprun")
+position = Vector2(0, 8.8)
+shape = SubResource("RectangleShape2D_dqkch")
 
 [node name="Whip" parent="." unique_id=1317637477 instance=ExtResource("4_dqkch")]
 position = Vector2(0.20000076, 7.799999)

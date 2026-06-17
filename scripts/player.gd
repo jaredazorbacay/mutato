@@ -56,12 +56,8 @@ func whip_attack(angle) -> void:
 	
 	if (cooldown > 0):
 		return
-	cooldown = 0.5
+	cooldown = 0.1
 	$Whip.rotation = angle
-	
-	var bodies: Array = $Whip/Area2D.get_overlapping_bodies()
-	for body in bodies:
-		body.take_damage(50)
 	
 	isAttacking = true
 	#//mouse-based direction	
@@ -75,7 +71,14 @@ func whip_attack(angle) -> void:
 	else:
 		$Whip.z_index = -1
 	$Whip/AnimatedSprite2D.play("whip")
+	
 	await get_tree().create_timer(0.2).timeout
+	
+	var bodies: Array = $Whip/Area2D.get_overlapping_bodies()
+	print(bodies)
+	for body in bodies:
+		body.take_damage(50)
+		
 	isAttacking = false
 	run_cooldown()
 	
