@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-var speed = 700
+var speed = 350
 var isAttacking : bool
 var xDirection : String
 var yDirection : String

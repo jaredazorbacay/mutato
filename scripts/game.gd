@@ -2,11 +2,14 @@ extends Node
 
 @onready var player = $/root/Main/Player
 const scientist_scene = preload("res://scenes/scientist.tscn")
+#const pantry_scene = preload("res://scenes/rooms/pantry.tscn")
+const pantry_scene = preload("res://scenes/rooms/main_laboratory.tscn")
 var enemies : int 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	enemies = 0
+	build_level()
 	pass # Replace with function body.
 
 
@@ -24,3 +27,9 @@ func _process(delta: float) -> void:
 				-x_offset, -y_offset
 			)
 			enemies+=1
+			
+
+func build_level():
+	var pantry : TileMapLayer = pantry_scene.instantiate()
+	pantry.z_index = -10
+	get_tree().current_scene.add_child(pantry)

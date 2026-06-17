@@ -10,7 +10,7 @@ var shooting: bool
 var bullet_scene = preload("res://scenes/scientist_bullet.tscn")
 
 func _ready() -> void:
-	speed = 200
+	speed = 100
 	health = 100
 	cooldown = 0
 	bullet_damage = 1

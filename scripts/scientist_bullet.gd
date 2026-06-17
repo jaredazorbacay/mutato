@@ -35,7 +35,7 @@ func _physics_process(delta: float) -> void:
 	if (fired):
 		velocity = (direction.normalized() + random_offset) * speed
 		move_and_slide()
-		if scale.x < 2:
+		if scale.x < 1:
 			scale.x += 0.9 * delta
 			scale.y += 0.9 * delta
 			
