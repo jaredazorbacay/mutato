@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://vha2qofyh5bp" path="res://scripts/enemy/scientist.gd" id="1_bcf38"]
 [ext_resource type="Texture2D" uid="uid://ia20pxfa4v7k" path="res://assets/sprites/scientist_sheet.png" id="2_8y8wj"]
+[ext_resource type="Texture2D" uid="uid://bohyh8fcj3anr" path="res://assets/shadow.png" id="2_ip72o"]
 [ext_resource type="PackedScene" uid="uid://dtsvsjjyig0e1" path="res://scenes/health_bar.tscn" id="3_8y8wj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gkk6p"]
@@ -172,13 +173,19 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8y8wj"]
-size = Vector2(21, 37)
+size = Vector2(20, 30)
 
 [node name="Scientist" type="CharacterBody2D" unique_id=1749521585]
 position = Vector2(0, -21)
+scale = Vector2(4, 4)
 collision_layer = 4
 collision_mask = 7
 script = ExtResource("1_bcf38")
+
+[node name="Shadow" type="Sprite2D" parent="." unique_id=1958637199]
+position = Vector2(0, 12)
+scale = Vector2(0.6875, 0.85625)
+texture = ExtResource("2_ip72o")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1525215028]
 position = Vector2(0, 8)
@@ -187,7 +194,7 @@ sprite_frames = SubResource("SpriteFrames_8tegq")
 animation = &"fire3"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=166521727]
-position = Vector2(0.5, 7.5)
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_8y8wj")
 
 [node name="HealthBar" parent="." unique_id=945588623 instance=ExtResource("3_8y8wj")]

@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var player = $/root/Main/Player
 var speed : int
 var health: int
+var bullet_damage: int
 var cooldown: float
 var shooting: bool
 var bullet_scene = preload("res://scenes/scientist_bullet.tscn")
@@ -12,6 +13,7 @@ func _ready() -> void:
 	speed = 200
 	health = 100
 	cooldown = 0
+	bullet_damage = 1
 	shooting = false
 	$HealthBar/ProgressBar.value = health
 
@@ -22,13 +24,15 @@ func take_damage(damage: int) -> void:
 		queue_free()
 
 func _physics_process(delta: float) -> void:
-	var distance_from_player = global_position.distance_to(player.global_position)
+	var avoiding = false
+	var distance_from_player = 10001
+	if player:
+		distance_from_player = global_position.distance_to(player.global_position)
+	
 	if  distance_from_player < 1000:
 		var direction: Vector2 = global_position.direction_to(player.global_position)
 		var cropped_angle = snappedf(direction.angle(), PI/4) / (PI/4)
 		cropped_angle = wrapi(int(cropped_angle), 0, 8)
-		if (!shooting):
-			$AnimatedSprite2D.animation = "run" + str(cropped_angle/2)
 		if (cooldown <=0 and distance_from_player < 650):
 			cooldown = 2
 			shooting = true
@@ -37,24 +41,42 @@ func _physics_process(delta: float) -> void:
 			$AnimatedSprite2D.frame = 0
 			await get_tree().create_timer(0.1).timeout
 			
-			shoot(direction, 500, global_position)
+			shoot(direction, 500, global_position, cropped_angle/2, 3)
 			run_cooldown()
-		elif (distance_from_player > 400 and shooting == false):
+		elif (distance_from_player > 550 and !shooting):
 			$AnimatedSprite2D.play()
 			velocity = direction.normalized() * speed
+			move_and_slide()
+		elif (distance_from_player < 400 and !shooting):
+			avoiding = true
+			$AnimatedSprite2D.play()
+			velocity = direction.normalized() * -speed
 			move_and_slide()
 		else:
 			$AnimatedSprite2D.stop()
 			$AnimatedSprite2D.frame = 1
+		
+		if (!shooting):
+			var direction_run = cropped_angle/2
+			if (!avoiding):
+				$AnimatedSprite2D.animation = "run" + str(direction_run)
+			else:
+				match direction_run:
+					0: direction_run = 2
+					1: direction_run = 3
+					2: direction_run = 0
+					3: direction_run = 1
+				$AnimatedSprite2D.animation = "run" + str(direction_run)
 
-
-func shoot(direction, speed, position):
-	var bullet : CharacterBody2D = bullet_scene.instantiate()
-	get_tree().current_scene.add_child(bullet)
-	if direction.angle() < 0:
-		bullet.z_index = -1
-	bullet.global_position = position
-	bullet.fire(direction, speed)
+func shoot(direction, speed, position, quadrant, count):
+	for i in count:
+		var bullet : CharacterBody2D = bullet_scene.instantiate()
+		get_tree().current_scene.add_child(bullet)
+		if direction.angle() < 0:
+			bullet.z_index = -1
+		bullet.global_position = position
+		bullet.fire(direction, speed, bullet_damage, quadrant)
+		await get_tree().create_timer(0.2).timeout
 	await get_tree().create_timer(0.5).timeout
 	shooting = false
 
