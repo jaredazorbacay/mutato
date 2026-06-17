@@ -34,11 +34,10 @@ func _process(delta: float) -> void:
 			yDirection = "U"
 		else: yDirection = ""
 	
+	$AnimatedSprite2D.animation =  "run" + yDirection + xDirection
 	if velocity.length() !=0:
-		$AnimatedSprite2D.animation =  "run" + yDirection + xDirection
 		$AnimatedSprite2D.play()
 	else:
-		$AnimatedSprite2D.animation =  "run" + yDirection + xDirection
 		$AnimatedSprite2D.stop()
 		$AnimatedSprite2D.frame = 1
 	

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://vha2qofyh5bp" path="res://scripts/enemy/scientist.gd" id="1_bcf38"]
 [ext_resource type="Texture2D" uid="uid://b0tpjjx17fgn8" path="res://assets/sprites/LabNPCs.png" id="2_8y8wj"]
+[ext_resource type="PackedScene" uid="uid://dtsvsjjyig0e1" path="res://scenes/health_bar.tscn" id="3_8y8wj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_md0e3"]
 atlas = ExtResource("2_8y8wj")
@@ -43,8 +44,13 @@ script = ExtResource("1_bcf38")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1525215028]
 sprite_frames = SubResource("SpriteFrames_8tegq")
-frame_progress = 0.0050569377
+frame_progress = 0.5338155
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=166521727]
 position = Vector2(-1, 7)
 shape = SubResource("CapsuleShape2D_c4w8v")
+
+[node name="HealthBar" parent="." unique_id=945588623 instance=ExtResource("3_8y8wj")]
+offset_top = -11.0
+offset_bottom = -11.0
+scale = Vector2(0.2, 0.2)
