@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b2lynukwiwi54"]
+
+[sub_resource type="TileSet" id="TileSet_h6i46"]
+
+[node name="pantry" type="TileMapLayer" unique_id=1782639568]
+tile_set = SubResource("TileSet_h6i46")

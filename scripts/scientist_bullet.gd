@@ -6,7 +6,6 @@ var fired = false
 
 
 func fire(direct, spd):
-	print(direct)
 	direction = direct
 	speed = spd
 	fired = true

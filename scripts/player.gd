@@ -75,7 +75,6 @@ func whip_attack(angle) -> void:
 	await get_tree().create_timer(0.2).timeout
 	
 	var bodies: Array = $Whip/Area2D.get_overlapping_bodies()
-	print(bodies)
 	for body in bodies:
 		body.take_damage(50)
 		
