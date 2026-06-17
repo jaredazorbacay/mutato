@@ -5,6 +5,7 @@ var isAttacking : bool
 var xDirection : String
 var yDirection : String
 var cooldown: float
+var health : int
 
 func _ready() -> void:
 	$AnimatedSprite2D.speed_scale = 1.75
@@ -12,6 +13,7 @@ func _ready() -> void:
 	xDirection = ""
 	yDirection = "D"
 	cooldown = 0
+	health = 100
 	
 func get_input():
 	var input_direct = Input.get_vector("left", "right", "up", "down")
@@ -56,12 +58,8 @@ func whip_attack(angle) -> void:
 	
 	if (cooldown > 0):
 		return
-	cooldown = 0.5
+	cooldown = 0.1
 	$Whip.rotation = angle
-	
-	var bodies: Array = $Whip/Area2D.get_overlapping_bodies()
-	for body in bodies:
-		body.take_damage(50)
 	
 	isAttacking = true
 	#//mouse-based direction	
@@ -75,10 +73,22 @@ func whip_attack(angle) -> void:
 	else:
 		$Whip.z_index = -1
 	$Whip/AnimatedSprite2D.play("whip")
+	
 	await get_tree().create_timer(0.2).timeout
+	
+	var bodies: Array = $Whip/Area2D.get_overlapping_bodies()
+	for body in bodies:
+		body.take_damage(50)
+		
 	isAttacking = false
 	run_cooldown()
-	
+
+
+func take_damage(damage: int) -> void:
+	health -= damage
+	print("hit")
+	if (health <= 0):
+		queue_free()
 	
 #********* UTILS **********#
 func set_face_index_by_angle(angle) -> void:
