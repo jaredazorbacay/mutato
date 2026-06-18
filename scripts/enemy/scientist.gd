@@ -23,9 +23,14 @@ func take_damage(damage: int) -> void:
 	health -= damage
 	$HealthBar/ProgressBar.value = health
 	$Hitflashanim.play("hit")
+	
 	Explode()
+	
 	if (health <= 0):
+		AudioController.play_death()
 		queue_free()
+	else:
+		AudioController.play_hit()
 	
 func Explode():
 	var _particle = deathParticle.instantiate();
