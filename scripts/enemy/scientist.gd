@@ -9,6 +9,8 @@ var cooldown: float
 var shooting: bool
 var bullet_scene = preload("res://scenes/scientist_bullet.tscn")
 
+@export var deathParticle : PackedScene
+
 func _ready() -> void:
 	speed = 100
 	health = 100
@@ -20,8 +22,17 @@ func _ready() -> void:
 func take_damage(damage: int) -> void:
 	health -= damage
 	$HealthBar/ProgressBar.value = health
+	$Hitflashanim.play("hit")
+	Explode()
 	if (health <= 0):
 		queue_free()
+	
+func Explode():
+	var _particle = deathParticle.instantiate();
+	_particle.position = global_position
+	_particle.rotation = global_rotation
+	_particle.emitting = true
+	get_tree().current_scene.add_child(_particle)
 
 func _physics_process(delta: float) -> void:
 	var avoiding = false
