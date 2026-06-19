@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bnf7ru71lvc03"
-path="res://.godot/imported/spriteSheet_fireEffect03_42x52.png-879ae73ca365b682ebd1a97bbd282aae.ctex"
+uid="uid://ba3gohq1tqgmy"
+path="res://.godot/imported/world-tileset.png-11a77adc8564113ed19be0603e105392.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/32px/spriteSheet_fireEffect03_42x52.png"
-dest_files=["res://.godot/imported/spriteSheet_fireEffect03_42x52.png-879ae73ca365b682ebd1a97bbd282aae.ctex"]
+source_file="res://assets/tiles/world-tileset.png"
+dest_files=["res://.godot/imported/world-tileset.png-11a77adc8564113ed19be0603e105392.ctex"]
 
 [params]
 
