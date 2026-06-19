@@ -61,6 +61,8 @@ func whip_attack(angle) -> void:
 	cooldown = 0.1
 	$Whip.rotation = angle
 	
+	AudioController.play_whip()
+	
 	isAttacking = true
 	#//mouse-based direction	
 	var mouse = get_local_mouse_position()
