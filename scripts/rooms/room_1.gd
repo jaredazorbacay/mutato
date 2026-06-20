@@ -5,6 +5,11 @@ var left_door: Vector2i
 var top_door: Vector2i
 var bottom_door: Vector2i
 
+var right_door_open: bool
+var left_door_open: bool
+var top_door_open: bool
+var bottom_door_open: bool
+
 # position in world blocks
 var map_coords: Vector2i
 
@@ -20,3 +25,6 @@ func _ready() -> void:
 
 func set_coords(coords: Vector2i):
 	map_coords = coords
+	
+func open_door(direction : String):
+	get_node(direction + "_door").queue_free()

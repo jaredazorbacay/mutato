@@ -3,6 +3,7 @@
 [ext_resource type="TileSet" uid="uid://b6lgy5b0wxxnc" path="res://assets/tiles/TileSets/map-tile-set.tres" id="1_2dixu"]
 [ext_resource type="Script" uid="uid://byj8r8qgm2ywu" path="res://scripts/rooms/room_3.gd" id="2_2dixu"]
 [ext_resource type="TileSet" uid="uid://bnigcx1q7lnx5" path="res://assets/tiles/TileSets/wall-tile-set.tres" id="3_vucmd"]
+[ext_resource type="TileSet" uid="uid://bgb0qedvxhq3n" path="res://atlas/walls.tres" id="5_2dixu"]
 [ext_resource type="TileSet" uid="uid://bxyowovkgu1wj" path="res://assets/tiles/TileSets/object-tile-set2.tres" id="5_nuaid"]
 
 [node name="Floor" type="TileMapLayer" unique_id=33208435]
@@ -17,3 +18,19 @@ tile_set = ExtResource("3_vucmd")
 [node name="Accessories2" type="TileMapLayer" parent="." unique_id=279617285]
 tile_map_data = PackedByteArray("AAAEAAIAAgAGAAYAAAAEAAgAAgAGAAYAAAAHAAIAAgAGAAYAAAAKAAsAAgAGAAYAAAAFAAYAAgAGAAYAAAAGAAwAAgAGAAYAAAAIAAYAAgAGAAYAAAAJAAcAAgAGAAYAAAAKAAYAAgAGAAYAAAAMAAUAAgAGAAYAAAADAAoAAgAHAAYAAAAIAAQAAgAGAAYAAAACAAwAAgAHAAYAAAAGAAIAAgAGAAYAAAAEAA0AAgAEAAYAAAAFAAgAAgAEAAYAAAAFAAwAAgADAAUAAAAMAAsAAgADAAYAAAA=")
 tile_set = ExtResource("5_nuaid")
+
+[node name="right_door" type="TileMapLayer" parent="." unique_id=529261958]
+tile_map_data = PackedByteArray("AAAPAAQAAgAAAAIAAAAPAAUAAgAAAAIAAAAPAAYAAgAAAAIAAAAPAAcAAgAAAAIAAAAPAAMAAgAAAAIAAAAPAAIAAgAAAAIAAAA=")
+tile_set = ExtResource("5_2dixu")
+
+[node name="left_door" type="TileMapLayer" parent="." unique_id=1165162084]
+tile_map_data = PackedByteArray("AAD//wYAAgAAAAIAADD//wcAAgAAAAIAADD//wMAAgAAAAIAADD//wQAAgAAAAIAADD//wUAAgAAAAIAADD//wIAAgAAAAIAADA=")
+tile_set = ExtResource("5_2dixu")
+
+[node name="top_door" type="TileMapLayer" parent="." unique_id=38678712]
+tile_map_data = PackedByteArray("AAAHAP3/AgABAAAAAAAHAP7/AgABAAEAAAAHAP//AgABAAIAAAAIAP3/AgABAAAAAAAIAP7/AgABAAEAAAAIAP//AgABAAIAAAAJAP3/AgABAAAAAAAJAP7/AgABAAEAAAAJAP//AgABAAIAAAAFAP3/AgABAAAAAAAFAP7/AgABAAEAAAAFAP//AgABAAIAAAAGAP3/AgABAAAAAAAGAP7/AgABAAEAAAAGAP//AgABAAIAAAA=")
+tile_set = ExtResource("5_2dixu")
+
+[node name="bottom_door" type="TileMapLayer" parent="." unique_id=1208427656]
+tile_map_data = PackedByteArray("AAAFABAAAgAFAAIAAFAGABAAAgAFAAIAAFAHABAAAgAFAAIAAFAIABAAAgAFAAIAAFAJABAAAgAFAAIAAFA=")
+tile_set = ExtResource("5_2dixu")

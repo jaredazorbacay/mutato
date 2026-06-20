@@ -18,11 +18,11 @@ enum TileTransform {
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	scene_for_rooms =[
-		preload("res://scenes/rooms/pantry.tscn")
-		#preload("res://scenes/rooms/room1.tscn"),
-		#preload("res://scenes/rooms/room2.tscn"),
-		#preload("res://scenes/rooms/room3.tscn"),
-		#preload("res://scenes/rooms/boss_room.tscn"),
+		preload("res://scenes/rooms/pantry.tscn"),
+		preload("res://scenes/rooms/room1.tscn"),
+		preload("res://scenes/rooms/room2.tscn"),
+		preload("res://scenes/rooms/room3.tscn"),
+		preload("res://scenes/rooms/boss_room.tscn"),
 	]
 	enemies = 0
 	var spawn_point : Vector2i = build_level()
