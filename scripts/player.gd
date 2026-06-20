@@ -135,7 +135,7 @@ func set_face_index_by_angle(angle) -> void:
 
 func activate_shield() -> void:
 	shield_active = true
-	shield_hits_remaining = 5
+	shield_hits_remaining = 25
 	$Shield.visible = true
 
 func run_cooldown():
