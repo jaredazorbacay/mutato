@@ -6,6 +6,8 @@ var xDirection : String
 var yDirection : String
 var cooldown: float
 var health : int
+var shield_active: bool
+var shield_hits_remaining: int
 
 func _ready() -> void:
 	$AnimatedSprite2D.speed_scale = 1.75
@@ -14,6 +16,10 @@ func _ready() -> void:
 	yDirection = "D"
 	cooldown = 0
 	health = 100
+	shield_active = true
+	
+	
+	$Shield.visible = true
 	
 func get_input():
 	var input_direct = Input.get_vector("left", "right", "up", "down")
@@ -87,6 +93,13 @@ func whip_attack(angle) -> void:
 
 
 func take_damage(damage: int) -> void:
+	if shield_active:
+		shield_hits_remaining -= 1
+		if shield_hits_remaining <= 0:
+			shield_active = false
+			$Shield.visible = false
+		return
+	
 	health -= damage
 	if (health <= 0):
 		queue_free()
@@ -119,6 +132,11 @@ func set_face_index_by_angle(angle) -> void:
 		7:
 			xDirection = "R"
 			yDirection = "U"
+
+func activate_shield() -> void:
+	shield_active = true
+	shield_hits_remaining = 25
+	$Shield.visible = true
 
 func run_cooldown():
 	while (cooldown > 0):
