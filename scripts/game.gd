@@ -18,11 +18,11 @@ enum TileTransform {
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	scene_for_rooms =[
-		preload("res://scenes/rooms/pantry.tscn"),
-		preload("res://scenes/rooms/room1.tscn"),
-		preload("res://scenes/rooms/room2.tscn"),
-		preload("res://scenes/rooms/room3.tscn"),
-		preload("res://scenes/rooms/boss_room.tscn"),
+		preload("res://scenes/rooms/pantry.tscn")
+		#preload("res://scenes/rooms/room1.tscn"),
+		#preload("res://scenes/rooms/room2.tscn"),
+		#preload("res://scenes/rooms/room3.tscn"),
+		#preload("res://scenes/rooms/boss_room.tscn"),
 	]
 	enemies = 0
 	var spawn_point : Vector2i = build_level()
@@ -96,12 +96,20 @@ func build_level() -> Vector2i:
 			
 			if (room.x > last_room_scene.map_coords.x): #new room is in right
 				draw_hallway( last_room_scene.tile_position_in_world + last_room_scene.right_door, Vector2i(currentX,currentY) + room_scene.left_door, "HORIZONTAL")
-			elif (room.x < last_room_scene.map_coords.x):
+				last_room_scene.open_door("right")
+				room_scene.open_door("left")
+			elif (room.x < last_room_scene.map_coords.x): #new room is in left
 				draw_hallway(Vector2i(currentX,currentY) + room_scene.right_door,  last_room_scene.tile_position_in_world + last_room_scene.left_door, "HORIZONTAL")
-			elif (room.y > last_room_scene.map_coords.y):
+				last_room_scene.open_door("left")
+				room_scene.open_door("right")
+			elif (room.y > last_room_scene.map_coords.y): #new room is in bottom
 				draw_hallway( last_room_scene.tile_position_in_world + last_room_scene.bottom_door, Vector2i(currentX,currentY) + room_scene.top_door, "VERTICAL")
-			else:
+				last_room_scene.open_door("bottom")
+				room_scene.open_door("top")
+			else: #new room is in top
 				draw_hallway( Vector2i(currentX,currentY) + room_scene.bottom_door, last_room_scene.tile_position_in_world + last_room_scene.top_door, "VERTICAL")
+				last_room_scene.open_door("top")
+				room_scene.open_door("bottom")
 			
 		#record room positions
 		room_scenes.append(room_scene)
