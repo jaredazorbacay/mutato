@@ -2,10 +2,10 @@ extends Node
 
 @onready var player = $/root/Main/Player
 const scientist_scene = preload("res://scenes/scientist.tscn")
-const pantry_scene = preload("res://scenes/rooms/pantry.tscn")
 const GRID_SIZE = 32
 #const pantry_scene = preload("res://scenes/rooms/main_laboratory.tscn")
 var enemies : int 
+var scene_for_rooms = []
 
 enum TileTransform {
 	ROTATE_0 = 0,
@@ -17,6 +17,13 @@ enum TileTransform {
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	scene_for_rooms =[
+		preload("res://scenes/rooms/pantry.tscn"),
+		preload("res://scenes/rooms/room1.tscn"),
+		preload("res://scenes/rooms/room2.tscn"),
+		preload("res://scenes/rooms/room3.tscn"),
+		preload("res://scenes/rooms/boss_room.tscn"),
+	]
 	enemies = 0
 	var spawn_point : Vector2i = build_level()
 	print(spawn_point)
@@ -74,7 +81,7 @@ func build_level() -> Vector2i:
 	for room in room_sequence:
 		var currentX = 0
 		var currentY = 0
-		var room_scene : TileMapLayer = pantry_scene.instantiate()
+		var room_scene : TileMapLayer = scene_for_rooms.pick_random().instantiate()
 		room_scene.z_index = -10
 		currentX = randi_range(10, 30) + (room.x * room_map_grid_size)
 		currentY = randi_range(0, 25) + (room.y * room_map_grid_size)
