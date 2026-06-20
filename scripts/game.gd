@@ -26,7 +26,6 @@ func _ready() -> void:
 	]
 	enemies = 0
 	var spawn_point : Vector2i = build_level()
-	print(spawn_point)
 	player.position = spawn_point + Vector2i(100, 100)
 	pass # Replace with function body.
 
@@ -113,6 +112,49 @@ func build_level() -> Vector2i:
 			
 		#record room positions
 		room_scenes.append(room_scene)
+	
+	#Dead ends
+	for room in room_scenes:
+		var available_neighbors = 	[Vector2i(room.map_coords.x+1, room.map_coords.y), 
+									Vector2i(room.map_coords.x-1, room.map_coords.y),
+									Vector2i(room.map_coords.x, room.map_coords.y+1),
+									Vector2i(room.map_coords.x, room.map_coords.y-1)]
+		available_neighbors.shuffle()
+		for neighbor in available_neighbors:
+			if rooms.has(neighbor):
+				rooms.erase(neighbor)
+				
+				var currentX = 0
+				var currentY = 0
+				var neighbor_room_scene : TileMapLayer = scene_for_rooms.pick_random().instantiate()
+				neighbor_room_scene.z_index = -10
+				currentX = randi_range(10, 30) + (neighbor.x * room_map_grid_size)
+				currentY = randi_range(0, 25) + (neighbor.y * room_map_grid_size)
+				neighbor_room_scene.set_coords(neighbor)
+				neighbor_room_scene.tile_position_in_world = Vector2i(currentX, currentY)
+				neighbor_room_scene.position = Vector2i(currentX, currentY) * GRID_SIZE
+				get_tree().current_scene.add_child(neighbor_room_scene)
+				
+				if (neighbor.x > room.map_coords.x): #new room is in right
+					draw_hallway( room.tile_position_in_world + room.right_door, Vector2i(currentX,currentY) + neighbor_room_scene.left_door, "HORIZONTAL")
+					room.open_door("right")
+					neighbor_room_scene.open_door("left")
+				elif (neighbor.x < room.map_coords.x): #new room is in left
+					draw_hallway(Vector2i(currentX,currentY) + neighbor_room_scene.right_door,  room.tile_position_in_world + room.left_door, "HORIZONTAL")
+					room.open_door("left")
+					neighbor_room_scene.open_door("right")
+				elif (neighbor.y > room.map_coords.y): #new room is in bottom
+					draw_hallway( room.tile_position_in_world + room.bottom_door, Vector2i(currentX,currentY) + neighbor_room_scene.top_door, "VERTICAL")
+					room.open_door("bottom")
+					neighbor_room_scene.open_door("top")
+				else: #new room is in top
+					draw_hallway( Vector2i(currentX,currentY) + neighbor_room_scene.bottom_door, room.tile_position_in_world + room.top_door, "VERTICAL")
+					room.open_door("top")
+					neighbor_room_scene.open_door("bottom")
+				
+				print(room.map_coords, neighbor)
+				break
+		
 	return room_scenes[0].position
 		
 		
