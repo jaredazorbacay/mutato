@@ -8,6 +8,11 @@ var cooldown: float
 var health : int
 var shield_active: bool
 var shield_hits_remaining: int
+var poison_whip_uses_remaining: int
+var poison_whip_active: bool
+
+const PoisonBubbles = preload("res://scenes/poison_bubbles.tscn")
+
 
 func _ready() -> void:
 	$AnimatedSprite2D.speed_scale = 1.75
@@ -16,10 +21,16 @@ func _ready() -> void:
 	yDirection = "D"
 	cooldown = 0
 	health = 100
-	shield_active = true
 	
+	#PLACEHOLDERS FOR MUTATIONS
+	#initialize
+	poison_whip_uses_remaining = 0
+	poison_whip_active = false
 	
-	$Shield.visible = true
+	#mutation functions
+	activate_shield()
+	activate_poison_whip()
+	
 	
 func get_input():
 	var input_direct = Input.get_vector("left", "right", "up", "down")
@@ -80,14 +91,35 @@ func whip_attack(angle) -> void:
 		$Whip.z_index = 1
 	else:
 		$Whip.z_index = -1
-	$Whip/AnimatedSprite2D.play("whip")
 	
+	#POISON WHIP TESTING HERE
+	if poison_whip_active:
+		$Whip/AnimatedSprite2D.play("whip_poison")
+	else:
+		$Whip/AnimatedSprite2D.play("whip")
+	
+	
+	#$Whip/AnimatedSprite2D.play("whip")
+
 	await get_tree().create_timer(0.2).timeout
-	
+
+	if poison_whip_active:
+		var bubbles = PoisonBubbles.instantiate()
+		get_parent().add_child(bubbles)
+		bubbles.global_position = $Whip/Area2D/CollisionShape2D.global_position
+		bubbles.emitting = true
+
 	var bodies: Array = $Whip/Area2D.get_overlapping_bodies()
 	for body in bodies:
 		body.take_damage(50)
-		
+		if poison_whip_active:
+			body.apply_poison(2, 3, 1.0)
+
+	if poison_whip_active:
+		poison_whip_uses_remaining -= 1
+		if poison_whip_uses_remaining <= 0:
+			poison_whip_active = false
+	
 	isAttacking = false
 	run_cooldown()
 
@@ -104,6 +136,18 @@ func take_damage(damage: int) -> void:
 	if (health <= 0):
 		queue_free()
 	
+
+#MUTATION FUNCTIONS
+func activate_poison_whip() -> void:
+	poison_whip_active = true
+	poison_whip_uses_remaining = 20
+
+func activate_shield() -> void:
+	shield_active = true
+	shield_hits_remaining = 25
+	$Shield.visible = true
+
+
 #********* UTILS **********#
 func set_face_index_by_angle(angle) -> void:
 	
@@ -132,11 +176,6 @@ func set_face_index_by_angle(angle) -> void:
 		7:
 			xDirection = "R"
 			yDirection = "U"
-
-func activate_shield() -> void:
-	shield_active = true
-	shield_hits_remaining = 25
-	$Shield.visible = true
 
 func run_cooldown():
 	while (cooldown > 0):

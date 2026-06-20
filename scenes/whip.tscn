@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cu63pfw0yla1j"]
 
 [ext_resource type="Texture2D" uid="uid://bym3oxi0l3mkk" path="res://assets/sprites/whip_sheet.png" id="1_h8dkq"]
+[ext_resource type="Texture2D" uid="uid://br2u0pl1i4nd3" path="res://assets/sprites/poison_whip_sheet.png" id="2_poison"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8ncxm"]
 atlas = ExtResource("1_h8dkq")
@@ -36,6 +37,42 @@ region = Rect2(0, 192, 160, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_s13ia"]
 atlas = ExtResource("1_h8dkq")
+region = Rect2(0, 224, 160, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p8ncxm"]
+atlas = ExtResource("2_poison")
+region = Rect2(0, 256, 160, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ph8dkq"]
+atlas = ExtResource("2_poison")
+region = Rect2(0, 0, 160, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p3sv8v"]
+atlas = ExtResource("2_poison")
+region = Rect2(0, 32, 160, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdlaad"]
+atlas = ExtResource("2_poison")
+region = Rect2(0, 64, 160, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pjqc2m"]
+atlas = ExtResource("2_poison")
+region = Rect2(0, 96, 160, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pe3b5q"]
+atlas = ExtResource("2_poison")
+region = Rect2(0, 128, 160, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pgtwdn"]
+atlas = ExtResource("2_poison")
+region = Rect2(0, 160, 160, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p8srp0"]
+atlas = ExtResource("2_poison")
+region = Rect2(0, 192, 160, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ps13ia"]
+atlas = ExtResource("2_poison")
 region = Rect2(0, 224, 160, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_p2k1x"]
@@ -74,6 +111,41 @@ animations = [{
 "loop": false,
 "name": &"whip",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_p8ncxm")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_ph8dkq")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_p3sv8v")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_pdlaad")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_pjqc2m")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_pe3b5q")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_pgtwdn")
+}, {
+"duration": 0.3,
+"texture": SubResource("AtlasTexture_p8srp0")
+}, {
+"duration": 0.3,
+"texture": SubResource("AtlasTexture_ps13ia")
+}, {
+"duration": 0.3,
+"texture": SubResource("AtlasTexture_p8ncxm")
+}],
+"loop": false,
+"name": &"whip_poison",
+"speed": 5.0
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h8dkq"]
@@ -84,9 +156,7 @@ size = Vector2(169, 20)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=397865893]
 position = Vector2(80, 0)
 sprite_frames = SubResource("SpriteFrames_p2k1x")
-animation = &"whip"
-frame = 9
-frame_progress = 1.0
+animation = &"whip_poison"
 
 [node name="Area2D" type="Area2D" parent="." unique_id=380815961]
 collision_layer = 8

@@ -8,6 +8,9 @@ var bullet_damage: int
 var cooldown: float
 var shooting: bool
 var bullet_scene = preload("res://scenes/scientist_bullet.tscn")
+var is_poisoned: bool
+
+const PoisonPulseShader = preload("res://scenes/poison_pulse.gdshader")
 
 @export var deathParticle : PackedScene
 
@@ -18,6 +21,9 @@ func _ready() -> void:
 	bullet_damage = 1
 	shooting = false
 	$HealthBar/ProgressBar.value = health
+	
+	#MUTATIONS PLACEHOLDER
+	is_poisoned = false
 
 func take_damage(damage: int) -> void:
 	health -= damage
@@ -100,3 +106,27 @@ func run_cooldown():
 	while (cooldown > 0):
 		await get_tree().create_timer(0.5).timeout
 		cooldown -= 0.5
+
+#MUTATION FUNCTIONS
+func apply_poison(damage_per_tick: int, tick_count: int, tick_interval: float) -> void:
+	if is_poisoned:
+		return
+	is_poisoned = true
+	
+	var poison_material = ShaderMaterial.new()
+	poison_material.shader = PoisonPulseShader
+	$AnimatedSprite2D.material = poison_material
+	
+	for i in tick_count:
+		await get_tree().create_timer(tick_interval).timeout
+		
+		health -= damage_per_tick
+		$HealthBar/ProgressBar.value = health
+		
+		if health <= 0:
+			AudioController.play_death()
+			queue_free()
+			return
+	
+	is_poisoned = false
+	$AnimatedSprite2D.material = null
