@@ -7,6 +7,14 @@ const GRID_SIZE = 32
 #const pantry_scene = preload("res://scenes/rooms/main_laboratory.tscn")
 var enemies : int 
 
+enum TileTransform {
+	ROTATE_0 = 0,
+	ROTATE_90 = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_H,
+	ROTATE_180 = TileSetAtlasSource.TRANSFORM_FLIP_H | TileSetAtlasSource.TRANSFORM_FLIP_V,
+	ROTATE_270 = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_V,
+	flip = TileSetAtlasSource.TRANSFORM_FLIP_H 
+}
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	enemies = 0
@@ -68,7 +76,7 @@ func build_level() -> Vector2i:
 		var currentY = 0
 		var room_scene : TileMapLayer = pantry_scene.instantiate()
 		room_scene.z_index = -10
-		currentX = randi_range(0, 25) + (room.x * room_map_grid_size)
+		currentX = randi_range(10, 30) + (room.x * room_map_grid_size)
 		currentY = randi_range(0, 25) + (room.y * room_map_grid_size)
 		room_scene.set_coords(room)
 		room_scene.tile_position_in_world = Vector2i(currentX, currentY)
@@ -96,26 +104,81 @@ func build_level() -> Vector2i:
 func draw_hallway(start_door : Vector2i, end_door : Vector2i, orientation : String):
 	if orientation == "HORIZONTAL":
 		var midpoint = (end_door.x - start_door.x)/ [1.5,2, 2.5].pick_random() + start_door.x
-		for i in range(start_door.x, midpoint + 1):
+		for i in range(start_door.x + 1, midpoint + 1):
+			
+			#path
 			$Hallway.set_cell(Vector2i(i, start_door.y + 1), 1, Vector2i(2, 3))
 			$Hallway.set_cell(Vector2i(i, start_door.y), 1, Vector2i(2, 3))
 			$Hallway.set_cell(Vector2i(i, start_door.y - 1), 1, Vector2i(2, 3))
 			
-		for i in range(midpoint + 1, end_door.x):
+			#walls
+			$Hallway.set_cell(Vector2i(i, start_door.y - 2), 1, Vector2i(1, 2))
+			$Hallway.set_cell(Vector2i(i, start_door.y - 3), 1, Vector2i(1, 1))
+			$Hallway.set_cell(Vector2i(i, start_door.y - 4), 1, Vector2i(1, 0))
+			
+			$Hallway.set_cell(Vector2i(i, start_door.y + 2), 1, Vector2i(5, 2), TileTransform.ROTATE_90)
+			
+		for i in range(midpoint + 1, end_door.x + 1):
 			$Hallway.set_cell(Vector2i(i, end_door.y + 1), 1, Vector2i(2, 3))
 			$Hallway.set_cell(Vector2i(i, end_door.y), 1, Vector2i(2, 3))
 			$Hallway.set_cell(Vector2i(i, end_door.y - 1), 1, Vector2i(2, 3))
+			
+			#walls
+			$Hallway.set_cell(Vector2i(i - 1, end_door.y - 2), 1, Vector2i(1, 2))
+			$Hallway.set_cell(Vector2i(i - 1, end_door.y - 3), 1, Vector2i(1, 1))
+			$Hallway.set_cell(Vector2i(i - 1, end_door.y - 4), 1, Vector2i(1, 0))
+			
+			$Hallway.set_cell(Vector2i(i - 1, end_door.y + 2), 1, Vector2i(5, 2), TileTransform.ROTATE_90)
 		
 		if (start_door.y < end_door.y):
 			for i in range(start_door.y - 1, end_door.y + 2):
 				$Hallway.set_cell(Vector2i(midpoint + 1, i), 1, Vector2i(2, 3))
 				$Hallway.set_cell(Vector2i(midpoint, i), 1, Vector2i(2, 3))
 				$Hallway.set_cell(Vector2i(midpoint - 1, i), 1, Vector2i(2, 3))
-		else:
+				
+				if (![i, i+1, i-1].has(start_door.y)): $Hallway.set_cell(Vector2i(midpoint - 2, i), 1, Vector2i(0, 2), TileTransform.ROTATE_180)
+				if (![i, i+1, i-1].has(end_door.y)): $Hallway.set_cell(Vector2i(midpoint + 2, i), 1, Vector2i(0, 2))
+			
+			#CornerWalls
+			$Hallway.set_cell(Vector2i(midpoint+1, start_door.y - 2), 1, Vector2i(1, 2))
+			$Hallway.set_cell(Vector2i(midpoint+1, start_door.y - 3), 1, Vector2i(1, 1))
+			$Hallway.set_cell(Vector2i(midpoint+1, start_door.y - 4), 1, Vector2i(1, 0))
+			
+			$Hallway.set_cell(Vector2i(midpoint + 2, start_door.y -2), 1, Vector2i(0, 2))
+			$Hallway.set_cell(Vector2i(midpoint + 2, start_door.y -3), 1, Vector2i(0, 2))
+			$Hallway.set_cell(Vector2i(midpoint + 2, start_door.y -4), 1, Vector2i(0, 1))
+			
+			$Hallway.set_cell(Vector2i(midpoint - 2, start_door.y +2), 1, Vector2i(5, 1), TileTransform.ROTATE_90)
+			
+			$Hallway.set_cell(Vector2i(midpoint+2, end_door.y - 2), 1, Vector2i(1, 2))
+			$Hallway.set_cell(Vector2i(midpoint+2, end_door.y - 3), 1, Vector2i(1, 1))
+			
+			$Hallway.set_cell(Vector2i(midpoint - 1, end_door.y + 2), 1, Vector2i(5, 2), TileTransform.ROTATE_90)
+			$Hallway.set_cell(Vector2i(midpoint - 2, end_door.y + 2), 1, Vector2i(0, 2), TileTransform.ROTATE_180)
+		elif (start_door.y > end_door.y) :
 			for i in range(end_door.y - 1, start_door.y + 2):
 				$Hallway.set_cell(Vector2i(midpoint + 1, i), 1, Vector2i(2, 3))
 				$Hallway.set_cell(Vector2i(midpoint, i), 1, Vector2i(2, 3))
 				$Hallway.set_cell(Vector2i(midpoint - 1, i), 1, Vector2i(2, 3))
+				
+				if (![i, i+1, i-1].has(start_door.y)): $Hallway.set_cell(Vector2i(midpoint - 2, i), 1, Vector2i(0, 2), TileTransform.ROTATE_180)
+				if (![i, i+1, i-1].has(end_door.y)): $Hallway.set_cell(Vector2i(midpoint + 2, i), 1, Vector2i(0, 2))
+			
+			#CornerWalls
+			$Hallway.set_cell(Vector2i(midpoint-2, start_door.y - 2), 1, Vector2i(1, 2))
+			$Hallway.set_cell(Vector2i(midpoint-2, start_door.y - 3), 1, Vector2i(1, 1))
+			
+			$Hallway.set_cell(Vector2i(midpoint-1, end_door.y - 2), 1, Vector2i(1, 2))
+			$Hallway.set_cell(Vector2i(midpoint-1, end_door.y - 3), 1, Vector2i(1, 1))
+			$Hallway.set_cell(Vector2i(midpoint-1, end_door.y - 4), 1, Vector2i(1, 0))
+			
+			$Hallway.set_cell(Vector2i(midpoint - 2, end_door.y -2), 1, Vector2i(0, 2), TileTransform.ROTATE_180)
+			$Hallway.set_cell(Vector2i(midpoint - 2, end_door.y -3), 1, Vector2i(0, 2), TileTransform.ROTATE_180)
+			$Hallway.set_cell(Vector2i(midpoint - 2, end_door.y -4), 1, Vector2i(0, 1), TileTransform.flip)
+			
+			$Hallway.set_cell(Vector2i(midpoint + 2, end_door.y +2), 1, Vector2i(5, 2), TileTransform.ROTATE_90)
+			$Hallway.set_cell(Vector2i(midpoint + 1, start_door.y +2), 1, Vector2i(5, 2), TileTransform.ROTATE_90)
+			$Hallway.set_cell(Vector2i(midpoint + 2, start_door.y +2), 1, Vector2i(0, 2))
 	else:
 		var midpoint = (end_door.y - start_door.y)/[1.5,2, 2.5].pick_random() + start_door.y
 		for i in range(start_door.y, midpoint + 1):
@@ -123,18 +186,50 @@ func draw_hallway(start_door : Vector2i, end_door : Vector2i, orientation : Stri
 			$Hallway.set_cell(Vector2i(start_door.x, i), 1, Vector2i(2, 3))
 			$Hallway.set_cell(Vector2i(start_door.x - 1, i), 1, Vector2i(2, 3))
 			
+			#walls
+			$Hallway.set_cell(Vector2i(start_door.x - 2, i+1), 1, Vector2i(0, 2), TileTransform.ROTATE_180)
+			$Hallway.set_cell(Vector2i(start_door.x + 2, i+1), 1, Vector2i(0, 2))
+			
 		for i in range(midpoint + 1, end_door.y):
 			$Hallway.set_cell(Vector2i(end_door.x + 1, i), 1, Vector2i(2, 3))
 			$Hallway.set_cell(Vector2i(end_door.x, i), 1, Vector2i(2, 3))
 			$Hallway.set_cell(Vector2i(end_door.x - 1, i), 1, Vector2i(2, 3))
+			
+			#walls
+			$Hallway.set_cell(Vector2i(end_door.x - 2, i-2), 1, Vector2i(0, 2), TileTransform.ROTATE_180)
+			$Hallway.set_cell(Vector2i(end_door.x + 2, i-2), 1, Vector2i(0, 2))
 		
 		if (start_door.x < end_door.x):
 			for i in range(start_door.x - 1, end_door.x + 2):
 				$Hallway.set_cell(Vector2i(i, midpoint + 1), 1, Vector2i(2, 3))
 				$Hallway.set_cell(Vector2i(i, midpoint), 1, Vector2i(2, 3))
 				$Hallway.set_cell(Vector2i(i, midpoint - 1), 1, Vector2i(2, 3))
-		else:
+				
+				#walls
+				if (![i, i+1, i-1].has(start_door.x)):
+					$Hallway.set_cell(Vector2i(i, midpoint - 2), 1, Vector2i(1, 2))
+					$Hallway.set_cell(Vector2i(i, midpoint - 3), 1, Vector2i(1, 1))
+				if (![i, i+1, i-1].has(end_door.x)): $Hallway.set_cell(Vector2i(i, midpoint + 2), 1, Vector2i(5, 2), TileTransform.ROTATE_90)
+				
+			#CornerWalls
+			$Hallway.set_cell(Vector2i(end_door.x +2, midpoint - 3), 1, Vector2i(0, 2))
+			$Hallway.set_cell(Vector2i(end_door.x +2, midpoint - 2), 1, Vector2i(0, 2))
+			
+			$Hallway.set_cell(Vector2i(start_door.x -2, midpoint + 2), 1, Vector2i(0, 2), TileTransform.ROTATE_180)
+					
+		elif (start_door.x > end_door.x):
 			for i in range(end_door.x - 1, start_door.x + 2):
 				$Hallway.set_cell(Vector2i(i, midpoint + 1), 1, Vector2i(2, 3))
 				$Hallway.set_cell(Vector2i(i, midpoint), 1, Vector2i(2, 3))
 				$Hallway.set_cell(Vector2i(i, midpoint - 1), 1, Vector2i(2, 3))
+				
+				if (![i, i+1, i-1].has(start_door.x)):
+					$Hallway.set_cell(Vector2i(i, midpoint - 2), 1, Vector2i(1, 2))
+					$Hallway.set_cell(Vector2i(i, midpoint - 3), 1, Vector2i(1, 1))
+				if (![i, i+1, i-1].has(end_door.x)): $Hallway.set_cell(Vector2i(i, midpoint + 2), 1, Vector2i(5, 2), TileTransform.ROTATE_90)
+			
+			#CornerWalls
+			$Hallway.set_cell(Vector2i(end_door.x -2, midpoint - 3), 1, Vector2i(0, 2),TileTransform.ROTATE_180)
+			$Hallway.set_cell(Vector2i(end_door.x -2, midpoint - 2), 1, Vector2i(0, 2),TileTransform.ROTATE_180)
+			
+			$Hallway.set_cell(Vector2i(start_door.x +2, midpoint + 2), 1, Vector2i(0, 2))
