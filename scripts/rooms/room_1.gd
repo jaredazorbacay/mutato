@@ -14,9 +14,9 @@ var tile_position_in_world: Vector2i
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	right_door = Vector2i(14,6)
-	#left_door = Vector2i(0, 0)
+	left_door = Vector2i(0, 6)
 	top_door = Vector2i(7,0)
-	#bottom_door = Vector2i(0, 0)
+	bottom_door = Vector2i(7, 15)
 
 func set_coords(coords: Vector2i):
 	map_coords = coords
