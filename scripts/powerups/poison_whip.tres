@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="PoisonWhipPowerUp" format=3 uid="uid://c5dejf4dd4ye3"]
+
+[ext_resource type="Script" uid="uid://h775bi07s7mi" path="res://scripts/powerups/poison_whip_powerup.gd" id="1_tu8ei"]
+
+[resource]
+script = ExtResource("1_tu8ei")
+powerup_name = "poison_whip"
+duration = 60.0
+metadata/_custom_type_script = "uid://h775bi07s7mi"

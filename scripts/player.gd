@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+
 var speed = 350
 var isAttacking : bool
 var xDirection : String
@@ -12,6 +13,20 @@ var poison_whip_uses_remaining: int
 var poison_whip_active: bool
 
 const PoisonBubbles = preload("res://scenes/poison_bubbles.tscn")
+const ShieldPowerUp = preload("res://scripts/powerups/shield.tres")
+const PoisonWhipPowerUp = preload("res://scripts/powerups/poison_whip.tres")
+
+#MUTATION VALUES
+signal powerup_force_ended(powerup_name: String)
+
+var active_powerups: Dictionary = {}
+var base_scale: Vector2
+var base_damage: int
+var damage_multiplier: float
+
+@onready var shield_node = $Shield
+
+const GrowthPowerUp = preload("res://scripts/powerups/growth.tres")
 
 
 func _ready() -> void:
@@ -27,9 +42,14 @@ func _ready() -> void:
 	poison_whip_uses_remaining = 0
 	poison_whip_active = false
 	
+	base_scale = scale
+	base_damage = 50
+	damage_multiplier = 1.0
+	
 	#mutation functions
-	activate_shield()
-	activate_poison_whip()
+	activate_powerup(GrowthPowerUp)
+	#activate_powerup(ShieldPowerUp)
+	activate_powerup(PoisonWhipPowerUp)
 	
 	
 func get_input():
@@ -87,10 +107,15 @@ func whip_attack(angle) -> void:
 	cropped_angle = wrapi(int(cropped_angle), 0, 8)
 	set_face_index_by_angle(cropped_angle)
 	
-	if angle > 0:
-		$Whip.z_index = 1
-	else:
-		$Whip.z_index = -1
+	if poison_whip_active:
+		poison_whip_uses_remaining -= 1
+		if poison_whip_uses_remaining <= 0:
+			var pw = active_powerups.get("poison_whip")
+			if pw:
+				active_powerups.erase("poison_whip")
+				pw.remove(self)
+				recalculate_damage_multiplier()
+				powerup_force_ended.emit("poison_whip")
 	
 	#POISON WHIP TESTING HERE
 	if poison_whip_active:
@@ -111,7 +136,8 @@ func whip_attack(angle) -> void:
 
 	var bodies: Array = $Whip/Area2D.get_overlapping_bodies()
 	for body in bodies:
-		body.take_damage(50)
+		var damage = base_damage * damage_multiplier
+		body.take_damage(damage)
 		if poison_whip_active:
 			body.apply_poison(2, 3, 1.0)
 
@@ -125,11 +151,14 @@ func whip_attack(angle) -> void:
 
 
 func take_damage(damage: int) -> void:
-	if shield_active:
+	if active_powerups.has("shield"):
 		shield_hits_remaining -= 1
 		if shield_hits_remaining <= 0:
-			shield_active = false
-			$Shield.visible = false
+			var shield_powerup = active_powerups["shield"]
+			active_powerups.erase("shield")
+			shield_powerup.remove(self)
+			recalculate_damage_multiplier()
+			powerup_force_ended.emit("shield")
 		return
 	
 	health -= damage
@@ -138,15 +167,42 @@ func take_damage(damage: int) -> void:
 	
 
 #MUTATION FUNCTIONS
+func activate_powerup(powerup: PowerUp) -> void:
+	if active_powerups.has(powerup.powerup_name):
+		return
+	
+	active_powerups[powerup.powerup_name] = powerup
+	powerup.apply(self)
+	recalculate_damage_multiplier()
+	
+	var timer = get_tree().create_timer(powerup.duration)
+	var ended_early = false
+	
+	var on_force_end = func(name):
+		if name == powerup.powerup_name:
+			ended_early = true
+	powerup_force_ended.connect(on_force_end)
+	
+	await timer.timeout
+	
+	powerup_force_ended.disconnect(on_force_end)
+	
+	if active_powerups.has(powerup.powerup_name):
+		active_powerups.erase(powerup.powerup_name)
+		powerup.remove(self)
+		recalculate_damage_multiplier()
+
+func recalculate_damage_multiplier() -> void:
+	damage_multiplier = 1.0
+	for powerup_name in active_powerups:
+		var powerup = active_powerups[powerup_name]
+		if "damage_multiplier" in powerup:
+			damage_multiplier *= powerup.damage_multiplier
+
 func activate_poison_whip() -> void:
 	poison_whip_active = true
 	poison_whip_uses_remaining = 20
-
-func activate_shield() -> void:
-	shield_active = true
-	shield_hits_remaining = 25
-	$Shield.visible = true
-
+	
 
 #********* UTILS **********#
 func set_face_index_by_angle(angle) -> void:

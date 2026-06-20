@@ -416,5 +416,6 @@ shape = SubResource("RectangleShape2D_dqkch")
 position = Vector2(0.20000076, 7.799999)
 
 [node name="Shield" type="Sprite2D" parent="." unique_id=288814809]
+visible = false
 material = SubResource("ShaderMaterial_ur7pv")
 texture = ExtResource("6_tuyoq")
