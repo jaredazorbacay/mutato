@@ -2,6 +2,7 @@ extends Node
 
 @onready var player = $/root/Main/Player
 const scientist_scene = preload("res://scenes/scientist.tscn")
+#const saber_scientist_scene = preload("res://scenes/saber_scientist.tscn")
 const GRID_SIZE = 32
 #const pantry_scene = preload("res://scenes/rooms/main_laboratory.tscn")
 var enemies : int 
@@ -36,7 +37,9 @@ func _process(delta: float) -> void:
 	if enemies < 2:
 		if randf_range(0, 1) > 0.5:
 			var radius = randi_range(500,1000)
+			#var radius = randi_range(0,0)
 			var scientist : CharacterBody2D = scientist_scene.instantiate()
+			#var saber_scientist : CharacterBody2D = saber_scientist_scene.instantiate()
 			var x_offset = randi_range(0, radius) * [-1, 1].pick_random()
 			var y_offset = sqrt(pow(radius, 2) - pow(x_offset, 2)) * [-1, 1].pick_random()
 			get_tree().current_scene.add_child(scientist)
@@ -44,6 +47,11 @@ func _process(delta: float) -> void:
 				-x_offset, -y_offset
 			)
 			enemies+=1
+			#get_tree().current_scene.add_child(saber_scientist)
+			#saber_scientist.global_position = player.global_position + Vector2(
+				#-x_offset, -y_offset
+			#)
+			#enemies+=2
 			
 func build_level() -> Vector2i:
 	var room_map_grid_size = 50 
