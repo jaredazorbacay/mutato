@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://blj132hx5m35y"]
+
+[ext_resource type="Texture2D" uid="uid://kml2t3lujpec" path="res://assets/sprites/Cards1.png" id="2_c3a6p"]
+
+[sub_resource type="GDScript" id="GDScript_6wf5g"]
+script/source = "extends CanvasLayer
+
+signal card_selected(index: int)
+
+@onready var card1: Button = $Panel/CardContainer/Card1
+@onready var card2: Button = $Panel/CardContainer/Card2
+@onready var card3: Button = $Panel/CardContainer/Card3
+
+func _ready() -> void:
+	visible = false
+	card1.pressed.connect(func(): _on_card_pressed(0))
+	card2.pressed.connect(func(): _on_card_pressed(1))
+	card3.pressed.connect(func(): _on_card_pressed(2))
+
+func show_choices(powerup_names: Array) -> void:
+	card1.text = powerup_names[0]
+	card2.text = powerup_names[1]
+	card3.text = powerup_names[2]
+	visible = true
+
+func _on_card_pressed(index: int) -> void:
+	visible = false
+	card_selected.emit(index)
+"
+
+[node name="PowerUpChoiceUI" type="CanvasLayer" unique_id=728754942]
+process_mode = 3
+script = SubResource("GDScript_6wf5g")
+
+[node name="Panel" type="Control" parent="." unique_id=1300648991]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CardContainer" type="HBoxContainer" parent="Panel" unique_id=1319435280]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="Card1" type="Button" parent="Panel/CardContainer" unique_id=97949546]
+custom_minimum_size = Vector2(150, 200)
+layout_mode = 2
+icon = ExtResource("2_c3a6p")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Card2" type="Button" parent="Panel/CardContainer" unique_id=999352014]
+custom_minimum_size = Vector2(150, 200)
+layout_mode = 2
+icon = ExtResource("2_c3a6p")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Card3" type="Button" parent="Panel/CardContainer" unique_id=1907893076]
+custom_minimum_size = Vector2(150, 200)
+layout_mode = 2
+icon = ExtResource("2_c3a6p")
+icon_alignment = 1
+expand_icon = true
