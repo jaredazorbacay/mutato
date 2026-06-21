@@ -35,12 +35,15 @@ func open_door(direction : String):
 	get_node(direction + "_door").queue_free()
 
 func spawn_enemies(count, level):
-	const scientist_scene = preload("res://scenes/scientist.tscn")
+	var enemies_scene = [
+		preload("res://scenes/scientist.tscn"),
+		preload("res://scenes/saber_scientist.tscn"),
+	]
+	
 	spawn_points.shuffle()
-	print(spawn_points)
 	for i in count:
 		var location = spawn_points.pick_random()
-		var enemy = scientist_scene.instantiate()
+		var enemy = enemies_scene.pick_random().instantiate()
 		enemy.z_index = 10
 		add_child(enemy)
 		enemy.global_position = global_position + Vector2(
@@ -49,7 +52,7 @@ func spawn_enemies(count, level):
 		spawn_points.erase(location)
 	
 	var location = spawn_points.pick_random()
-	var enemy = scientist_scene.instantiate()
+	var enemy = enemies_scene.pick_random().instantiate()
 	enemy.hasFertilizer = true
 	enemy.z_index = 10
 	add_child(enemy)

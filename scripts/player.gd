@@ -208,6 +208,7 @@ func take_damage(damage: int) -> void:
 			powerup_force_ended.emit("shield")
 		return
 	
+	$Camera2D.apply_shake(20)
 	health -= damage
 	healthChanged.emit()
 	if (health <= 0):

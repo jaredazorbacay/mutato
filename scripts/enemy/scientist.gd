@@ -21,7 +21,7 @@ func _ready() -> void:
 	speed = 100
 	health = 100
 	cooldown = 0
-	bullet_damage = 1
+	bullet_damage = 5
 	shooting = false
 	$HealthBar/ProgressBar.value = health
 	

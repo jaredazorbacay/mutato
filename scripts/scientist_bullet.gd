@@ -44,9 +44,10 @@ func _physics_process(delta: float) -> void:
 		for i in range(get_slide_collision_count()):
 			var collision = get_slide_collision(i)
 			var collider = collision.get_collider()
-			if (collider.name == player.name):
-				player.take_damage(damage)
-				break
+			if player:
+				if (collider.name == player.name):
+						player.take_damage(damage)
+						break
 func explode():
 	queue_free()
 	

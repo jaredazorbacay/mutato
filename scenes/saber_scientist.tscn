@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cdkbtlptbsj0"]
+[gd_scene format=3 uid="uid://fcxcv71ewr20"]
 
 [ext_resource type="Texture2D" uid="uid://dp3nj4lo5p3nw" path="res://assets/sprites/saber_scientist_sheet.png" id="1_3bfqc"]
 [ext_resource type="Script" uid="uid://c24vg5p2lfg2f" path="res://scripts/enemy/saber_scientist.gd" id="1_5twsi"]
@@ -230,7 +230,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qedel"]
-size = Vector2(37.442516, 64.19691)
+size = Vector2(36.247284, 41.195244)
 
 [node name="saber_scientist" type="CharacterBody2D" unique_id=747091510]
 scale = Vector2(0.94820404, 1.00745)
@@ -245,7 +245,7 @@ animation = &"slash3"
 frame_progress = 0.6616242
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=247238389]
-position = Vector2(0.35512292, 2.8657558)
+position = Vector2(-0.17218676, 15.273321)
 rotation = 3.1415925
 scale = Vector2(0.8823596, -1.0788409)
 shape = SubResource("RectangleShape2D_qedel")

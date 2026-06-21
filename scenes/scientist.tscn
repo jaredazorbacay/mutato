@@ -190,7 +190,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8y8wj"]
-size = Vector2(20, 30)
+size = Vector2(20, 24)
 
 [sub_resource type="Animation" id="Animation_ip72o"]
 length = 0.001
@@ -251,7 +251,7 @@ sprite_frames = SubResource("SpriteFrames_8tegq")
 animation = &"fire3"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=166521727]
-position = Vector2(0, 8)
+position = Vector2(0, 11)
 shape = SubResource("RectangleShape2D_8y8wj")
 
 [node name="HealthBar" parent="." unique_id=945588623 instance=ExtResource("3_8y8wj")]

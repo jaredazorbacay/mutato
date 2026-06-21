@@ -2,6 +2,7 @@ extends Node
 
 @onready var player = $/root/Main/GameNode/Player
 const scientist_scene = preload("res://scenes/scientist.tscn")
+const saber_scientist_scene = preload("res://scenes/saber_scientist.tscn")
 const GRID_SIZE = 32
 #const pantry_scene = preload("res://scenes/rooms/main_laboratory.tscn")
 var enemies : int 
@@ -46,7 +47,7 @@ func _process(delta: float) -> void:
 			
 func build_level() -> Vector2i:
 	var room_map_grid_size = 50 
-	var room_map_grid_dimension : Vector2i = Vector2i(5, 5)
+	var room_map_grid_dimension : Vector2i = Vector2i(4, 4)
 	var rooms = []
 	var room_sequence = []
 	var current_room : Vector2i
