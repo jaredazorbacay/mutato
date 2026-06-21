@@ -28,3 +28,17 @@ func set_coords(coords: Vector2i):
 	
 func open_door(direction : String):
 	get_node(direction + "_door").queue_free()
+	
+func spawn_boss(level):
+	var enemies_scene = preload("res://scenes/boss.tscn")
+	
+	
+	var location = Vector2i (6,8)
+	var enemy = enemies_scene.instantiate()
+	enemy.z_index = 10
+	enemy.set_level(level)
+	add_child(enemy)
+	enemy.global_position = global_position + Vector2(
+		location.x * 32, location.y *32
+	)
+	return enemy

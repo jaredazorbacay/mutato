@@ -18,6 +18,7 @@ enum TileTransform {
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	player.died.connect(game_over)
 	scene_for_rooms =[
 		preload("res://scenes/rooms/pantry.tscn"),
 		preload("res://scenes/rooms/room1.tscn"),
@@ -80,9 +81,14 @@ func build_level() -> Vector2i:
 	var room_scenes = []
 	var level = 0
 	for room in room_sequence:
+		var boss
 		var currentX = 0
 		var currentY = 0
-		var room_scene : TileMapLayer = scene_for_rooms.pick_random().instantiate()
+		var room_scene : TileMapLayer 
+		if room_scenes.size() < room_sequence.size()-1:
+			room_scene = scene_for_rooms.pick_random().instantiate()
+		else:
+			room_scene = preload("res://scenes/rooms/boss_room.tscn").instantiate()
 		room_scene.z_index = -10
 		currentX = randi_range(10, 30) + (room.x * room_map_grid_size)
 		currentY = randi_range(0, 25) + (room.y * room_map_grid_size)
@@ -91,7 +97,12 @@ func build_level() -> Vector2i:
 		room_scene.position = Vector2i(currentX, currentY) * GRID_SIZE
 		add_child(room_scene)
 		if (level != 0):
-			room_scene.spawn_enemies(5 + int(level/3), level)
+			if room_scenes.size() < room_sequence.size()-1:
+				room_scene.spawn_enemies(5 + int(level/3), level)
+			else:
+				boss = room_scene.spawn_boss(level + 1)
+				boss.died.connect(game_over)
+				pass
 		level += 1
 		
 		if room_scenes.size() > 0:
@@ -163,6 +174,10 @@ func build_level() -> Vector2i:
 				pass
 		dead_level +=1
 	return room_scenes[0].position
+	
+func game_over():
+	get_tree().change_scene_to_file("res://scenes/game_over.tscn")
+	queue_free()
 		
 		
 func draw_hallway(start_door : Vector2i, end_door : Vector2i, orientation : String):

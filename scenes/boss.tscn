@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://nxn7bdia1o4n"]
+
+[ext_resource type="Script" uid="uid://bdp60ul727mbf" path="res://scripts/enemy/boss.gd" id="1_qnbj4"]
+[ext_resource type="Texture2D" uid="uid://ugvha3dxismu" path="res://assets/sprites/boss.png" id="2_jncid"]
+[ext_resource type="PackedScene" uid="uid://ctld1f45dpxl7" path="res://scripts/enemy/DeathParticle.tscn" id="2_wqpjq"]
+[ext_resource type="Texture2D" uid="uid://bohyh8fcj3anr" path="res://assets/shadow.png" id="3_2cdgk"]
+[ext_resource type="PackedScene" uid="uid://dtsvsjjyig0e1" path="res://scenes/health_bar.tscn" id="5_2avx2"]
+
+[sub_resource type="Shader" id="Shader_ip72o"]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+
+uniform float flash_modifier : hint_range(0.0, 1.0) = 0.0;
+
+void fragment() {
+    vec4 original = texture(TEXTURE, UV);
+    COLOR = mix(original, vec4(1.0, 1.0, 1.0, original.a), flash_modifier);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4n05l"]
+resource_local_to_scene = true
+shader = SubResource("Shader_ip72o")
+shader_parameter/flash_modifier = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qnbj4"]
+atlas = ExtResource("2_jncid")
+region = Rect2(0, 0, 68, 84)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r3bxh"]
+atlas = ExtResource("2_jncid")
+region = Rect2(68, 0, 68, 84)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wqpjq"]
+atlas = ExtResource("2_jncid")
+region = Rect2(136, 0, 68, 84)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2cdgk"]
+atlas = ExtResource("2_jncid")
+region = Rect2(204, 0, 68, 84)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8tegq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qnbj4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r3bxh")
+}],
+"loop": true,
+"name": &"run0",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wqpjq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2cdgk")
+}],
+"loop": true,
+"name": &"run1",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8y8wj"]
+size = Vector2(22, 31.75)
+
+[sub_resource type="Animation" id="Animation_ip72o"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:material:shader_parameter/flash_modifier")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_4n05l"]
+resource_name = "hit"
+length = 0.5
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:material:shader_parameter/flash_modifier")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_x70hv"]
+_data = {
+&"RESET": SubResource("Animation_ip72o"),
+&"hit": SubResource("Animation_4n05l")
+}
+
+[node name="Boss" type="CharacterBody2D" unique_id=1749521585]
+position = Vector2(0, -21)
+scale = Vector2(2, 2)
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_qnbj4")
+deathParticle = ExtResource("2_wqpjq")
+
+[node name="Shadow" type="Sprite2D" parent="." unique_id=1958637199]
+position = Vector2(1, 20.000002)
+scale = Vector2(1.140625, 1.2249999)
+texture = ExtResource("3_2cdgk")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1525215028]
+material = SubResource("ShaderMaterial_4n05l")
+position = Vector2(0, 8)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_8tegq")
+animation = &"run0"
+frame_progress = 0.54948026
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=166521727]
+position = Vector2(1.5, 7.875)
+shape = SubResource("RectangleShape2D_8y8wj")
+
+[node name="HealthBar" parent="." unique_id=945588623 instance=ExtResource("5_2avx2")]
+offset_top = -11.0
+offset_bottom = -11.0
+scale = Vector2(0.2, 0.2)
+
+[node name="Hitflashanim" type="AnimationPlayer" parent="." unique_id=436165647]
+libraries/ = SubResource("AnimationLibrary_x70hv")

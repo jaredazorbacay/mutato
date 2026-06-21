@@ -21,6 +21,7 @@ var lowk_time: float
 
 signal healthChanged
 signal shieldChanged
+signal died
 
 #MUTATION VALUES
 const PoisonBubbles = preload("res://scenes/poison_bubbles.tscn")
@@ -216,6 +217,7 @@ func take_damage(damage: int) -> void:
 	health -= damage
 	healthChanged.emit()
 	if (health <= 0):
+		died.emit()
 		queue_free()
 	
 
