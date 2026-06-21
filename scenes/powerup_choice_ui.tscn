@@ -11,7 +11,7 @@ const camo = preload(\"res://assets/sprites/powerups/camouflage-mutation.png\")
 const thorns = preload(\"res://assets/sprites/powerups/thorn-mutation.png\")
 const growth = preload(\"res://assets/sprites/powerups/growth-mutation.png\")
 const shield = preload(\"res://assets/sprites/powerups/shield-mutation.png\")
-const poison = preload(\"res://assets/sprites/powerups/backstab-mutation.png\")
+const poison = preload(\"res://assets/sprites/powerups/poison_mutation.png\")
 
 var all_powerups: Array[String] = [
 	\"GrowthPowerUp\",
