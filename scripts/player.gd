@@ -57,6 +57,8 @@ func _ready() -> void:
 	cooldown = 0
 	health = 100
 	
+	#PLACEHOLDERS FOR MUTATIONS
+	#initialize
 	poison_whip_uses_remaining = 0
 	poison_whip_active = false
 	multi_whip_active = false
@@ -80,7 +82,7 @@ func get_input():
 func _process(delta: float) -> void:
 	if is_camouflaged:
 		return
-
+	#//Movement based direction
 	if (!isAttacking and velocity.length() !=0):
 		if velocity.x > 0:
 			xDirection = "R"
@@ -241,7 +243,7 @@ func recalculate_damage_multiplier() -> void:
 		if "damage_multiplier" in powerup:
 			damage_multiplier *= powerup.damage_multiplier
 
-
+#MUTATION FUNCTIONS
 func show_powerup_choices() -> void:
 	var choices = all_powerups.duplicate()
 	choices.shuffle()
@@ -260,7 +262,7 @@ func _on_powerup_card_selected(index: int) -> void:
 	get_tree().paused = false
 	activate_powerup(chosen)
 
-
+#********* UTILS **********#
 func set_face_index_by_angle(angle) -> void:
 	
 	match angle:
