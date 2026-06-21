@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://c3vffb5icscif"]
+
+[ext_resource type="Script" uid="uid://jy4frhio1o02" path="res://scripts/main_menu.gd" id="1_ekxnf"]
+[ext_resource type="Texture2D" uid="uid://covvy4liqm8ur" path="res://assets/sprites/mbg.png" id="2_bqqt6"]
+[ext_resource type="PackedScene" uid="uid://q7i4u245asve" path="res://scenes/fade_transition.tscn" id="3_bqqt6"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vue75"]
+texture = ExtResource("2_bqqt6")
+
+[node name="Main Menu" type="Node2D" unique_id=1497008133]
+script = ExtResource("1_ekxnf")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1491499562]
+
+[node name="Panel" type="Control" parent="CanvasLayer" unique_id=1822344340]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="CanvasLayer/Panel" unique_id=1428300118]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_vue75")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Panel" unique_id=1701474314]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -46.0
+offset_right = 52.0
+offset_bottom = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="Start" type="Button" parent="CanvasLayer/Panel/VBoxContainer" unique_id=20532816]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Start Game"
+
+[node name="Quit" type="Button" parent="CanvasLayer/Panel/VBoxContainer" unique_id=1170641702]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Quit"
+
+[node name="CanvasLayer2" parent="." unique_id=2123024332 instance=ExtResource("3_bqqt6")]
+visible = false
+
+[connection signal="pressed" from="CanvasLayer/Panel/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="CanvasLayer/Panel/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
