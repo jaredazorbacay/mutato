@@ -11,6 +11,7 @@ var hasFertilizer = false
 var fertilizer_scene = preload("res://scenes/items/fertilizer.tscn")
 var facing_direction: Vector2
 var is_poisoned: bool
+var max_health: int
 const PoisonPulseShader = preload("res://scenes/poison_pulse.gdshader")
 
 @export var deathParticle : PackedScene
@@ -18,9 +19,7 @@ const PoisonPulseShader = preload("res://scenes/poison_pulse.gdshader")
 
 func _ready() -> void:
 	speed = 175
-	health = 100
 	cooldown = 0
-	slash_damage = 10
 	attacking = false
 	$HealthBar/ProgressBar.value = health
 
@@ -144,3 +143,11 @@ func drops():
 		var fertilizer_object = fertilizer_scene.instantiate()
 		get_tree().current_scene.add_child(fertilizer_object)
 		fertilizer_object.position = global_position
+
+func set_level(lvl):
+	max_health = 100 + (25 * lvl)
+	health = 100 + (25 * lvl)
+	$HealthBar/ProgressBar.max_value = max_health
+	$HealthBar/ProgressBar.value = health
+	slash_damage = 5 + (2 * lvl)
+	pass

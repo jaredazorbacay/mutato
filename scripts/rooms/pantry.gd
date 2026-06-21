@@ -45,6 +45,7 @@ func spawn_enemies(count, level):
 		var location = spawn_points.pick_random()
 		var enemy = enemies_scene.pick_random().instantiate()
 		enemy.z_index = 10
+		enemy.set_level(level)
 		add_child(enemy)
 		enemy.global_position = global_position + Vector2(
 			location.x * 32, location.y *32
@@ -55,6 +56,7 @@ func spawn_enemies(count, level):
 	var enemy = enemies_scene.pick_random().instantiate()
 	enemy.hasFertilizer = true
 	enemy.z_index = 10
+	enemy.set_level(level)
 	add_child(enemy)
 	enemy.global_position = global_position + Vector2(
 		location.x * 32, location.y *32
