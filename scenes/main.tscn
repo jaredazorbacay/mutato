@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://bb8nsnjxo3wde" path="res://scripts/main.gd" id="1_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://da88ngh5erprd" path="res://scenes/player.tscn" id="2_0wfyh"]
 [ext_resource type="Texture2D" uid="uid://cr6wu8v35s35m" path="res://assets/sprites/Tile_Set_New.png" id="3_sugp2"]
+[ext_resource type="Script" uid="uid://c0kutpsd18fgk" path="res://scripts/progress_bar.gd" id="5_tbgi4"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jyhfs"]
 texture = ExtResource("3_sugp2")
@@ -54,6 +55,31 @@ tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_jyhfs")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbgi4"]
+bg_color = Color(0.16078432, 0.7254902, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 17
+corner_radius_top_right = 17
+corner_radius_bottom_right = 17
+corner_radius_bottom_left = 17
+corner_detail = 17
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tefeu"]
+bg_color = Color(0.94509804, 0.09411765, 0.20784314, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.17254902, 0.98039216, 0.12156863, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+corner_detail = 15
+
 [node name="Main" type="Node" unique_id=1810310620]
 script = ExtResource("1_tbgi4")
 
@@ -74,3 +100,22 @@ drag_vertical_enabled = true
 
 [node name="Hallway" type="TileMapLayer" parent="GameNode" unique_id=107319385]
 tile_set = SubResource("TileSet_0wfyh")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1566668404]
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer" unique_id=624565348 node_paths=PackedStringArray("player")]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -40.0
+offset_right = 342.0
+offset_bottom = -13.0
+grow_vertical = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_tbgi4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_tefeu")
+value = 100.0
+show_percentage = false
+script = ExtResource("5_tbgi4")
+player = NodePath("../../GameNode/Player")
+metadata/_edit_use_anchors_ = true
