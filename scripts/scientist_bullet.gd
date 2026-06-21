@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@onready var player = $/root/Main/Player
+@onready var player = $/root/Main/GameNode/Player
 var direction
 var speed : float
 var fired = false
