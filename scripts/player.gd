@@ -238,6 +238,7 @@ func activate_powerup(powerup: String) -> void:
 			healthChanged.emit()
 			scale = Vector2(1 + (1- (1/float(active_powerups["growth"] + 1))),1 + (1- (1/float(active_powerups["growth"] + 1))))
 			base_damage += 10
+			speed -= speed/10
 		"CamoPowerUp":
 			active_powerups["camo"] +=1
 			is_camouflaged = true
