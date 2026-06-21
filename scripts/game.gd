@@ -19,10 +19,9 @@ enum TileTransform {
 func _ready() -> void:
 	scene_for_rooms =[
 		preload("res://scenes/rooms/pantry.tscn"),
-		#preload("res://scenes/rooms/room1.tscn"),
-		#preload("res://scenes/rooms/room2.tscn"),
-		#preload("res://scenes/rooms/room3.tscn"),
-		#preload("res://scenes/rooms/boss_room.tscn"),
+		preload("res://scenes/rooms/room1.tscn"),
+		preload("res://scenes/rooms/room2.tscn"),
+		preload("res://scenes/rooms/room3.tscn"),
 	]
 	enemies = 0
 	var spawn_point : Vector2i = build_level()
@@ -78,6 +77,7 @@ func build_level() -> Vector2i:
 		isStuck = !room_found
 	
 	var room_scenes = []
+	var level = 0
 	for room in room_sequence:
 		var currentX = 0
 		var currentY = 0
@@ -89,6 +89,9 @@ func build_level() -> Vector2i:
 		room_scene.tile_position_in_world = Vector2i(currentX, currentY)
 		room_scene.position = Vector2i(currentX, currentY) * GRID_SIZE
 		add_child(room_scene)
+		if (level != 0):
+			room_scene.spawn_enemies(5 + int(level/3), level)
+		level += 1
 		
 		if room_scenes.size() > 0:
 			#get last room and draw a halway
@@ -114,7 +117,8 @@ func build_level() -> Vector2i:
 		#record room positions
 		room_scenes.append(room_scene)
 	
-	#Dead ends
+	#Dead end rooms
+	var dead_level = 1
 	for room in room_scenes:
 		var available_neighbors = 	[Vector2i(room.map_coords.x+1, room.map_coords.y), 
 									Vector2i(room.map_coords.x-1, room.map_coords.y),
@@ -127,7 +131,7 @@ func build_level() -> Vector2i:
 				
 				var currentX = 0
 				var currentY = 0
-				var neighbor_room_scene : TileMapLayer = scene_for_rooms.pick_random().instantiate()
+				var neighbor_room_scene : TileMapLayer = scene_for_rooms.pick_random().instantiate(2)
 				neighbor_room_scene.z_index = -10
 				currentX = randi_range(10, 30) + (neighbor.x * room_map_grid_size)
 				currentY = randi_range(0, 25) + (neighbor.y * room_map_grid_size)
@@ -135,6 +139,7 @@ func build_level() -> Vector2i:
 				neighbor_room_scene.tile_position_in_world = Vector2i(currentX, currentY)
 				neighbor_room_scene.position = Vector2i(currentX, currentY) * GRID_SIZE
 				add_child(neighbor_room_scene)
+				neighbor_room_scene.spawn_enemies(5 + int(dead_level/3), dead_level)
 				
 				if (neighbor.x > room.map_coords.x): #new room is in right
 					draw_hallway( room.tile_position_in_world + room.right_door, Vector2i(currentX,currentY) + neighbor_room_scene.left_door, "HORIZONTAL")
@@ -154,8 +159,8 @@ func build_level() -> Vector2i:
 					neighbor_room_scene.open_door("bottom")
 				
 				print(room.map_coords, neighbor)
-				
-		
+				pass
+		dead_level +=1
 	return room_scenes[0].position
 		
 		

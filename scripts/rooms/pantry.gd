@@ -29,13 +29,11 @@ func _ready() -> void:
 	add_spawn_zone(5,9,1,6)
 	add_spawn_zone(7,12,7,10)
 	add_spawn_zone(15,17,7,14)
-	
-	spawn_enemies(5)
 
 func set_coords(coords: Vector2i):
 	map_coords = coords
 	
-func spawn_enemies(count):
+func spawn_enemies(count, level):
 	const scientist_scene = preload("res://scenes/scientist.tscn")
 	spawn_points.shuffle()
 	for i in count:
@@ -62,6 +60,6 @@ func open_door(direction : String):
 	get_node(direction + "_door").queue_free()
 	
 func add_spawn_zone(initX, finX, initY, finY):
-	for x in range(initX + 1, finX - 1):
-		for y in range(initY+ 1, finY - 1):
+	for x in range(initX, finX):
+		for y in range(initY, finY):
 			spawn_points.append(Vector2i(x,y))
