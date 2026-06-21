@@ -5,13 +5,21 @@ extends Node
 
 func _ready() -> void:
 	if not mute:
-		$BGM.play() 
+		$MBGM.play() 
 		pass
 
+func play_bgm() -> void:
+	if not mute:
+		$BGM.play() 
 
-#func _process(delta: float) -> void:
-	#pass
-	
+func play_mbgm() -> void:
+	if not mute:
+		$MBGM.play()
+
+func stop_mbgm() -> void:
+	if not mute:
+		$MBGM.stop()
+
 func play_whip():
 	if not mute:
 		$WhipSound.play()

@@ -4,6 +4,7 @@
 [ext_resource type="AudioStream" uid="uid://dk7xw7ahqpk6o" path="res://assets/audio/sounds/power_up.wav" id="2_aufy8"]
 [ext_resource type="AudioStream" uid="uid://ba7w3n5f3gfpe" path="res://assets/audio/music/bgm.wav" id="2_blxgy"]
 [ext_resource type="AudioStream" uid="uid://cmp3wpywdls2e" path="res://assets/audio/sounds/hurt.wav" id="3_blxgy"]
+[ext_resource type="AudioStream" uid="uid://df3afo1rql2lf" path="res://assets/audio/music/mbgm.mp3" id="3_xujww"]
 [ext_resource type="AudioStream" uid="uid://brqie3khwuyr" path="res://assets/audio/sounds/explosion.wav" id="4_aufy8"]
 
 [node name="AudioController" type="Node" unique_id=1083093584]
@@ -11,6 +12,10 @@ script = ExtResource("1_dr783")
 
 [node name="BGM" type="AudioStreamPlayer" parent="." unique_id=2072757441]
 stream = ExtResource("2_blxgy")
+volume_db = -0.5
+
+[node name="MBGM" type="AudioStreamPlayer" parent="." unique_id=937934042]
+stream = ExtResource("3_xujww")
 volume_db = -0.5
 
 [node name="WhipSound" type="AudioStreamPlayer" parent="." unique_id=1652834926]
