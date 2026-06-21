@@ -3,11 +3,11 @@
 [ext_resource type="FontFile" uid="uid://5os7njjy1wh" path="res://assets/fonts/Press_Start_2P/PressStart2P-Regular.ttf" id="1_6uw4y"]
 
 [sub_resource type="Animation" id="Animation_x8c23"]
-length = 0.001
+length = 10.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Control/Label:theme_override_colors/font_color")
+tracks/0/path = NodePath("Label:theme_override_colors/font_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -23,7 +23,7 @@ length = 10.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Control/Label:theme_override_colors/font_color")
+tracks/0/path = NodePath("Label:theme_override_colors/font_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
