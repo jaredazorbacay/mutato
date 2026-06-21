@@ -7,21 +7,28 @@ extends CharacterBody2D
 @export var deathParticle: PackedScene
 
 
+
 var health: int
 var facing_direction: Vector2 
 var can_attack: bool
+var hasFertilizer = false
+var fertilizer_scene = preload("res://scenes/items/fertilizer.tscn")
+var is_poisoned: bool
+const PoisonPulseShader = preload("res://scenes/poison_pulse.gdshader")
 
 @onready var player = $/root/Main/GameNode/Player
 
 func _ready() -> void:
-	speed = 90
+	speed = 300
 	detection_range = 150.0
 	attack_cooldown = 1.2
-	max_health = 50
+	max_health = 100
 	facing_direction = Vector2.DOWN
 	can_attack = true
 	
 	health = max_health
+	$HealthBar/ProgressBar.max_value = max_health
+	$HealthBar/ProgressBar.value = health
 	$AnimatedSprite2D.play("run0")
 
 func _physics_process(delta: float) -> void:
@@ -72,7 +79,7 @@ func attack_player(target: CharacterBody2D) -> void:
 	if "is_camouflaged" in target and target.is_camouflaged:
 		target.powerup_force_ended.emit("camo")
 
-	$AttackCooldownTimer.start()
+	$AttackCoolDown.start()
 
 
 func _on_attack_cool_down_timeout() -> void:
@@ -95,8 +102,8 @@ func take_damage(damage: int, attacker_position: Vector2 = Vector2.ZERO) -> void
 	Explode()
 
 	if health <= 0:
+		drops()
 		AudioController.play_death()
-		get_node("/root/Main").dogs -= 1
 		queue_free()
 	else:
 		AudioController.play_hit()
@@ -109,3 +116,32 @@ func Explode() -> void:
 	_particle.rotation = global_rotation
 	_particle.emitting = true
 	get_tree().current_scene.add_child(_particle)
+
+func drops():
+	if hasFertilizer:
+		var fertilizer_object = fertilizer_scene.instantiate()
+		get_tree().current_scene.add_child(fertilizer_object)
+		fertilizer_object.position = global_position
+		
+func apply_poison(damage_per_tick: int, tick_count: int, tick_interval: float) -> void:
+	if is_poisoned:
+		return
+	is_poisoned = true
+	
+	var poison_material = ShaderMaterial.new()
+	poison_material.shader = PoisonPulseShader
+	$AnimatedSprite2D.material = poison_material
+	
+	for i in tick_count:
+		await get_tree().create_timer(tick_interval).timeout
+		
+		health -= damage_per_tick
+		$HealthBar/ProgressBar.value = health
+		
+		if health <= 0:
+			AudioController.play_death()
+			queue_free()
+			return
+	
+	is_poisoned = false
+	$AnimatedSprite2D.material = null

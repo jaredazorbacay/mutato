@@ -37,6 +37,7 @@ func spawn_enemies(count, level):
 	var enemies_scene = [
 		preload("res://scenes/scientist.tscn"),
 		preload("res://scenes/saber_scientist.tscn"),
+		preload("res://scenes/dog.tscn"),
 	]
 	
 	spawn_points.shuffle()

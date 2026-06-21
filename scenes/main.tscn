@@ -119,8 +119,8 @@ tile_set = SubResource("TileSet_0wfyh")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1566668404]
 
-[node name="Shield" type="ProgressBar" parent="CanvasLayer" unique_id=956281516 node_paths=PackedStringArray("player")]
-anchors_preset = -1
+[node name="Shield" type="ProgressBar" parent="CanvasLayer" unique_id=956281516]
+anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 355.0
@@ -133,7 +133,6 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_o6xl0")
 value = 100.0
 show_percentage = false
 script = ExtResource("7_o6xl0")
-player = NodePath("../../GameNode/Player")
 metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="CanvasLayer/Shield" unique_id=2144434749]

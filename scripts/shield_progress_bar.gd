@@ -1,6 +1,6 @@
 extends ProgressBar
 
-@export var player: Player
+@onready var player = $/root/Main/GameNode/Player
 
 
 func _ready():
