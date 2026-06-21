@@ -402,6 +402,9 @@ shader_parameter/noise_tex = SubResource("NoiseTexture2D_smehm")
 shader_parameter/speed = 0.5
 shader_parameter/pulse_frequency = 2.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_fjrip"]
+radius = 30.001852
+
 [node name="Player" type="CharacterBody2D" unique_id=1883848433 groups=["player"]]
 z_index = 10
 scale = Vector2(3, 3)
@@ -428,3 +431,10 @@ position = Vector2(0.20000076, 7.799999)
 visible = false
 material = SubResource("ShaderMaterial_ur7pv")
 texture = ExtResource("6_tuyoq")
+
+[node name="ThornArea" type="Area2D" parent="." unique_id=554621813]
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ThornArea" unique_id=1207567091]
+shape = SubResource("CircleShape2D_fjrip")

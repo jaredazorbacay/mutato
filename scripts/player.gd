@@ -243,12 +243,22 @@ func activate_powerup(powerup: String) -> void:
 			active_powerups["camo"] +=1
 			is_camouflaged = true
 			$AnimatedSprite2D.play("potato")
-			pass
 		"ThornsPowerUp":
-			
-			pass
+			active_powerups["thorns"] +=1
+			if (active_powerups["thorns"] == 1):
+				start_thorns()
+		
 		
 	pass
+	
+func start_thorns():
+	while true:
+		await get_tree().create_timer(0.1 + (1/(active_powerups["thorns"] + 1))).timeout
+		var bodies: Array = $ThornArea.get_overlapping_bodies()
+		for body in bodies:
+			print(body)
+			var damage = 2 + (2 * active_powerups["thorns"])
+			body.take_damage_lowk(damage)
 
 func recalculate_damage_multiplier() -> void:
 	damage_multiplier = 1.0

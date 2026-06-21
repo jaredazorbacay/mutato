@@ -151,3 +151,11 @@ func set_level(lvl):
 	$HealthBar/ProgressBar.value = health
 	damage = 2 + (1 * lvl)
 	pass
+	
+func take_damage_lowk(dmg):
+	health -= dmg
+	$HealthBar/ProgressBar.value = health
+	if health <= 0:
+		drops()
+		AudioController.play_death()
+		queue_free()
