@@ -9,6 +9,7 @@ var cooldown: float
 var shooting: bool
 var bullet_scene = preload("res://scenes/scientist_bullet.tscn")
 var is_poisoned: bool
+var facing_direction: Vector2
 
 const PoisonPulseShader = preload("res://scenes/poison_pulse.gdshader")
 
@@ -24,9 +25,19 @@ func _ready() -> void:
 	
 	#MUTATIONS PLACEHOLDER
 	is_poisoned = false
+	facing_direction = Vector2.DOWN
 
-func take_damage(damage: int) -> void:
-	health -= damage
+func take_damage(damage: int, attacker_position: Vector2 = Vector2.ZERO) -> void:
+	var final_damage = damage
+	
+	if attacker_position != Vector2.ZERO:
+		var direction_to_attacker = global_position.direction_to(attacker_position)
+		var dot = facing_direction.dot(direction_to_attacker)
+		if dot < -0.3:
+			final_damage *= 2.0
+			print("BACKSTAB! damage: ", final_damage)
+	
+	health -= final_damage
 	$HealthBar/ProgressBar.value = health
 	$Hitflashanim.play("hit")
 	
@@ -48,11 +59,12 @@ func Explode():
 func _physics_process(delta: float) -> void:
 	var avoiding = false
 	var distance_from_player = 10001
-	if player:
+	if player and not player.is_camouflaged:
 		distance_from_player = global_position.distance_to(player.global_position)
 	
 	if  distance_from_player < 1000:
 		var direction: Vector2 = global_position.direction_to(player.global_position)
+		facing_direction = direction
 		var cropped_angle = snappedf(direction.angle(), PI/4) / (PI/4)
 		cropped_angle = wrapi(int(cropped_angle), 0, 8)
 		if (cooldown <=0 and distance_from_player < 650):

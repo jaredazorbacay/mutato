@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://d2buyrihickuc" path="res://scripts/player.gd" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://cpdw3q7tv4fm8" path="res://assets/sprites/Mutato-Sprite-Sheet-Sheet.png" id="2_g2els"]
 [ext_resource type="Texture2D" uid="uid://bohyh8fcj3anr" path="res://assets/shadow.png" id="2_qhqgy"]
+[ext_resource type="Texture2D" uid="uid://b0nrbd8jyj2qr" path="res://assets/sprites/potato_camo.png" id="3_fjrip"]
 [ext_resource type="PackedScene" uid="uid://cu63pfw0yla1j" path="res://scenes/whip.tscn" id="4_dqkch"]
 [ext_resource type="Shader" uid="uid://vlnwb4pgq5pc" path="res://scenes/shield.gdshader" id="5_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://dx4xllr1scbvr" path="res://assets/sprites/shield.png" id="6_tuyoq"]
@@ -105,6 +106,14 @@ region = Rect2(160, 0, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_f1ej7"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_fjrip")
+}],
+"loop": true,
+"name": &"potato",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_qhqgy")
@@ -406,7 +415,7 @@ texture = ExtResource("2_qhqgy")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=174481657]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_f1ej7")
-animation = &"runUR"
+animation = &"potato"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1354392781]
 position = Vector2(0, 8.8)

@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_n305h")
-scale_multiplier = 5.0
+scale_multiplier = 2.0
 powerup_name = "growth"
-duration = 60.0
+duration = 15.0
 metadata/_custom_type_script = "uid://cdvwukoc0o12c"

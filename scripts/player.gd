@@ -12,17 +12,20 @@ var shield_hits_remaining: int
 var poison_whip_uses_remaining: int
 var poison_whip_active: bool
 
+
+#MUTATION VALUES
 const PoisonBubbles = preload("res://scenes/poison_bubbles.tscn")
 const ShieldPowerUp = preload("res://scripts/powerups/shield.tres")
 const PoisonWhipPowerUp = preload("res://scripts/powerups/poison_whip.tres")
+const CamoPowerUp = preload("res://scripts/powerups/camo.tres")
 
-#MUTATION VALUES
 signal powerup_force_ended(powerup_name: String)
 
 var active_powerups: Dictionary = {}
 var base_scale: Vector2
 var base_damage: int
 var damage_multiplier: float
+var is_camouflaged: bool
 
 @onready var shield_node = $Shield
 
@@ -46,10 +49,13 @@ func _ready() -> void:
 	base_damage = 50
 	damage_multiplier = 1.0
 	
+	is_camouflaged = false
+	
 	#mutation functions
-	activate_powerup(GrowthPowerUp)
+	#activate_powerup(GrowthPowerUp)
 	#activate_powerup(ShieldPowerUp)
 	activate_powerup(PoisonWhipPowerUp)
+	activate_powerup(CamoPowerUp)
 	
 	
 func get_input():
@@ -58,6 +64,8 @@ func get_input():
 	
 	
 func _process(delta: float) -> void:
+	if is_camouflaged:
+		return
 
 	#//Movement based direction
 	if (!isAttacking and velocity.length() !=0):
@@ -137,7 +145,7 @@ func whip_attack(angle) -> void:
 	var bodies: Array = $Whip/Area2D.get_overlapping_bodies()
 	for body in bodies:
 		var damage = base_damage * damage_multiplier
-		body.take_damage(damage)
+		body.take_damage(damage, global_position)
 		if poison_whip_active:
 			body.apply_poison(2, 3, 1.0)
 

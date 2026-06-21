@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MultiWhipPowerUp" format=3 uid="uid://cqrrk8c1xqx1w"]
+
+[ext_resource type="Script" uid="uid://welb06h66faq" path="res://scripts/powerups/multi_whip_powerup.gd" id="1_r1gkv"]
+
+[resource]
+script = ExtResource("1_r1gkv")
+metadata/_custom_type_script = "uid://welb06h66faq"
