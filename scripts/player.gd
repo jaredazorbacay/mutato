@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+class_name Player
 
 var speed = 350
 var isAttacking : bool
@@ -15,6 +16,7 @@ var multi_whip_active: bool
 var multi_whip_count: int
 var is_camouflaged: bool
 
+signal healthChanged
 
 #MUTATION VALUES
 const PoisonBubbles = preload("res://scenes/poison_bubbles.tscn")
@@ -207,6 +209,7 @@ func take_damage(damage: int) -> void:
 		return
 	
 	health -= damage
+	healthChanged.emit()
 	if (health <= 0):
 		queue_free()
 	
