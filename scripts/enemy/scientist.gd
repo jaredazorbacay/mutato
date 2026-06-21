@@ -5,6 +5,7 @@ extends CharacterBody2D
 var speed : int
 var health: int
 var bullet_damage: int
+var bullet_count: int
 var cooldown: float
 var shooting: bool
 var bullet_scene = preload("res://scenes/scientist_bullet.tscn")
@@ -12,6 +13,7 @@ var fertilizer_scene = preload("res://scenes/items/fertilizer.tscn")
 var is_poisoned: bool
 var facing_direction: Vector2
 var hasFertilizer = false
+var max_health: int
 
 const PoisonPulseShader = preload("res://scenes/poison_pulse.gdshader")
 
@@ -19,9 +21,7 @@ const PoisonPulseShader = preload("res://scenes/poison_pulse.gdshader")
 
 func _ready() -> void:
 	speed = 100
-	health = 100
 	cooldown = 0
-	bullet_damage = 5
 	shooting = false
 	$HealthBar/ProgressBar.value = health
 	
@@ -80,7 +80,7 @@ func _physics_process(delta: float) -> void:
 			$AnimatedSprite2D.frame = 0
 			await get_tree().create_timer(0.1).timeout
 			
-			shoot(direction, 500, global_position, cropped_angle/2, 3)
+			shoot(direction, 500, global_position, cropped_angle/2, bullet_count)
 			run_cooldown()
 		elif (distance_from_player > 550 and !shooting):
 			$AnimatedSprite2D.play()
@@ -153,3 +153,12 @@ func drops():
 		var fertilizer_object = fertilizer_scene.instantiate()
 		get_tree().current_scene.add_child(fertilizer_object)
 		fertilizer_object.position = global_position
+		
+func set_level(lvl):
+	print(lvl)
+	max_health = 50 + (10 * lvl)
+	health = max_health
+	$HealthBar/ProgressBar.max_value = max_health
+	$HealthBar/ProgressBar.value = health
+	bullet_damage = 3 + (1 * lvl)
+	bullet_count = 1 + floor(lvl/4)

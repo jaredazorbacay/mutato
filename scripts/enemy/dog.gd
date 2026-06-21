@@ -15,18 +15,16 @@ var hasFertilizer = false
 var fertilizer_scene = preload("res://scenes/items/fertilizer.tscn")
 var is_poisoned: bool
 const PoisonPulseShader = preload("res://scenes/poison_pulse.gdshader")
+var damage
 
 @onready var player = $/root/Main/GameNode/Player
 
 func _ready() -> void:
-	speed = 300
-	detection_range = 150.0
+	speed = 200
+	detection_range = 300
 	attack_cooldown = 1.2
-	max_health = 100
 	facing_direction = Vector2.DOWN
 	can_attack = true
-	
-	health = max_health
 	$HealthBar/ProgressBar.max_value = max_health
 	$HealthBar/ProgressBar.value = health
 	$AnimatedSprite2D.play("run0")
@@ -74,7 +72,7 @@ func attack_player(target: CharacterBody2D) -> void:
 	can_attack = false
 
 	if target.has_method("take_damage"):
-		target.take_damage(10)
+		target.take_damage(damage)
 
 	if "is_camouflaged" in target and target.is_camouflaged:
 		target.powerup_force_ended.emit("camo")
@@ -145,3 +143,11 @@ func apply_poison(damage_per_tick: int, tick_count: int, tick_interval: float) -
 	
 	is_poisoned = false
 	$AnimatedSprite2D.material = null
+	
+func set_level(lvl):
+	max_health = 50 + (15 * lvl)
+	health = 50 + (15 * lvl)
+	$HealthBar/ProgressBar.max_value = max_health
+	$HealthBar/ProgressBar.value = health
+	damage = 2 + (1 * lvl)
+	pass
