@@ -46,8 +46,8 @@ func _physics_process(delta: float) -> void:
 			var collider = collision.get_collider()
 			if player:
 				if (collider.name == player.name):
-						player.take_damage(damage)
-						break
+					player.take_damage(damage)
+					break
 func explode():
 	queue_free()
 	

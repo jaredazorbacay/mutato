@@ -10,6 +10,8 @@ var attacking: bool   # Added to prevent overlapping melee attacks
 var hasFertilizer = false
 var fertilizer_scene = preload("res://scenes/items/fertilizer.tscn")
 var facing_direction: Vector2
+var is_poisoned: bool
+const PoisonPulseShader = preload("res://scenes/poison_pulse.gdshader")
 
 @export var deathParticle : PackedScene
 @onready var stuck_timer = $StuckTimer
@@ -59,7 +61,7 @@ func _physics_process(delta: float) -> void:
 	if player:
 		distance_from_player = global_position.distance_to(player.global_position)
 	
-	if  distance_from_player < 1000:
+	if  distance_from_player < 1000 and not player.is_camouflaged:
 		var direction: Vector2 = global_position.direction_to(player.global_position)
 		var cropped_angle = snappedf(direction.angle(), PI/4) / (PI/4)
 		cropped_angle = wrapi(int(cropped_angle), 0, 8)
@@ -108,6 +110,29 @@ func saber_attack(cropped_angle: int, direction: Vector2) -> void:
 	
 	# Start processing the attack cooldown
 	run_cooldown()
+	
+func apply_poison(damage_per_tick: int, tick_count: int, tick_interval: float) -> void:
+	if is_poisoned:
+		return
+	is_poisoned = true
+	
+	var poison_material = ShaderMaterial.new()
+	poison_material.shader = PoisonPulseShader
+	$AnimatedSprite2D.material = poison_material
+	
+	for i in tick_count:
+		await get_tree().create_timer(tick_interval).timeout
+		
+		health -= damage_per_tick
+		$HealthBar/ProgressBar.value = health
+		
+		if health <= 0:
+			AudioController.play_death()
+			queue_free()
+			return
+	
+	is_poisoned = false
+	$AnimatedSprite2D.material = null
 	
 func run_cooldown():
 	while (cooldown > 0):

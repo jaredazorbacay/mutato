@@ -8,15 +8,19 @@ var xDirection : String
 var yDirection : String
 var cooldown: float
 var health : int
+var max_health: int
 var shield_active: bool
 var shield_hits_remaining: int
+var max_shield: int
 var poison_whip_uses_remaining: int
 var poison_whip_active: bool
 var multi_whip_active: bool
 var multi_whip_count: int
 var is_camouflaged: bool
+var lowk_time: float
 
 signal healthChanged
+signal shieldChanged
 
 #MUTATION VALUES
 const PoisonBubbles = preload("res://scenes/poison_bubbles.tscn")
@@ -27,22 +31,28 @@ const MultiWhipPowerUp = preload("res://scripts/powerups/multi_whip.tres")
 const CamoPowerUp = preload("res://scripts/powerups/camo.tres")
 const WhipScene = preload("res://scenes/whip.tscn")
 
-const FertilizerScene = preload("res://scenes/fertilizer.tscn")
+const FertilizerScene = preload("res://scenes/items/fertilizer.tscn")
 const PowerUpChoiceUI = preload("res://scenes/powerup_choice_ui.tscn")
 
 signal powerup_force_ended(powerup_name: String)
 
-var active_powerups: Dictionary = {}
+var active_powerups: Dictionary = {
+	"poison": 0,
+	"growth": 0,
+	"shield": 0,
+	"camo": 0,
+	"thorns": 0,
+}
 var base_scale: Vector2
 var base_damage: int
 var damage_multiplier: float
 
-var all_powerups: Array[PowerUp] = [
-	GrowthPowerUp,
-	ShieldPowerUp,
-	PoisonWhipPowerUp,
-	MultiWhipPowerUp,
-	CamoPowerUp
+var all_powerups: Array[String] = [
+	"GrowthPowerUp",
+	"ShieldPowerUp",
+	"PoisonWhipPowerUp",
+	"CamoPowerUp",
+	"ThornsPowerUp",
 ]
 
 var pending_powerup_choices: Array = []
@@ -58,6 +68,7 @@ func _ready() -> void:
 	yDirection = "D"
 	cooldown = 0
 	health = 100
+	max_health = 100
 	
 	#PLACEHOLDERS FOR MUTATIONS
 	#initialize
@@ -122,8 +133,16 @@ func _input(event: InputEvent) -> void:
 
 func spawn_test_fertilizer() -> void:
 	var fert = FertilizerScene.instantiate()
-	get_parent().add_child(fert)
+	get_parent().get_parent().add_child(fert)
 	fert.global_position = global_position + Vector2(150, 0)
+	
+func time_to_camo():
+	while lowk_time > 0:
+		await get_tree().create_timer(0.5).timeout
+		lowk_time -= 0.5
+	
+	$AnimatedSprite2D.play("potato")
+	is_camouflaged = true
 
 
 func whip_attack(angle) -> void:
@@ -140,29 +159,14 @@ func whip_attack(angle) -> void:
 	cropped_angle = wrapi(int(cropped_angle), 0, 8)
 	set_face_index_by_angle(cropped_angle)
 	
-	if poison_whip_active:
-		poison_whip_uses_remaining -= 1
-		if poison_whip_uses_remaining <= 0:
-			var pw = active_powerups.get("poison_whip")
-			if pw:
-				active_powerups.erase("poison_whip")
-				pw.remove(self)
-				recalculate_damage_multiplier()
-				powerup_force_ended.emit("poison_whip")
 	
-	if multi_whip_active:
-		var angle_step = TAU / multi_whip_count
-		for i in multi_whip_count:
-			var swing_angle = angle + (angle_step * i)
-			var whip_node = $Whip if i == 0 else WhipScene.instantiate()
-			if i != 0:
-				add_child(whip_node)
-			perform_whip_swing(whip_node, swing_angle)
-			if i != 0:
-				await get_tree().create_timer(0.5).timeout
-				whip_node.queue_free()
-	else:
-		await perform_whip_swing($Whip, angle)
+	await perform_whip_swing($Whip, angle)
+	
+	if is_camouflaged == true:
+		is_camouflaged = false
+		lowk_time = 5/(active_powerups["camo"] * 0.5)
+		time_to_camo()
+	
 	
 	isAttacking = false
 	run_cooldown()
@@ -191,54 +195,59 @@ func perform_whip_swing(whip_node: Node2D, angle: float) -> void:
 	
 	var bodies: Array = whip_node.get_node("Area2D").get_overlapping_bodies()
 	for body in bodies:
-		var damage = base_damage * damage_multiplier
+		var damage = (base_damage * damage_multiplier) + (base_damage * (active_powerups["camo"]/3) if is_camouflaged else 1)
 		body.take_damage(damage, global_position)
 		if poison_whip_active:
-			body.apply_poison(2, 3, 1.0)
+			body.apply_poison(3 + (2*active_powerups["poison"]), 3 + (0.5*active_powerups["poison"]), 1.0 / (active_powerups["poison"]/2))
 
 
 func take_damage(damage: int) -> void:
-	if active_powerups.has("shield"):
-		shield_hits_remaining -= 1
-		if shield_hits_remaining <= 0:
-			var shield_powerup = active_powerups["shield"]
-			active_powerups.erase("shield")
-			shield_powerup.remove(self)
-			recalculate_damage_multiplier()
-			powerup_force_ended.emit("shield")
+	if shield_hits_remaining > damage:
+		shield_hits_remaining -= damage
+		shieldChanged.emit()
 		return
-	
-	$Camera2D.apply_shake(20)
+	elif shield_hits_remaining > 0:
+		shield_hits_remaining = 0
+		shield_node.visible = false
+		shieldChanged.emit()
+		regen_shield()
+		return
+	$Camera2D.apply_shake(100)
 	health -= damage
 	healthChanged.emit()
 	if (health <= 0):
 		queue_free()
 	
 
-func activate_powerup(powerup: PowerUp) -> void:
-	if active_powerups.has(powerup.powerup_name):
-		return
-	
-	active_powerups[powerup.powerup_name] = powerup
-	powerup.apply(self)
-	recalculate_damage_multiplier()
-	
-	var timer = get_tree().create_timer(powerup.duration)
-	var ended_early = false
-	
-	var on_force_end = func(name):
-		if name == powerup.powerup_name:
-			ended_early = true
-	powerup_force_ended.connect(on_force_end)
-	
-	await timer.timeout
-	
-	powerup_force_ended.disconnect(on_force_end)
-	
-	if active_powerups.has(powerup.powerup_name):
-		active_powerups.erase(powerup.powerup_name)
-		powerup.remove(self)
-		recalculate_damage_multiplier()
+func activate_powerup(powerup: String) -> void:
+	match powerup:
+		"PoisonWhipPowerUp": 
+			active_powerups["poison"] +=1
+			poison_whip_active = true
+		"ShieldPowerUp":
+			active_powerups["shield"] +=1
+			shield_node.visible = true
+			max_shield = 25 + (active_powerups["shield"] * 10)
+			shield_hits_remaining = 25 + (active_powerups["shield"] * 10)
+			shieldChanged.emit()
+		"GrowthPowerUp":
+			active_powerups["growth"] +=1
+			print (1/float(active_powerups["growth"]) )
+			max_health += 25
+			health += 25
+			healthChanged.emit()
+			scale = Vector2(1 + (1- (1/float(active_powerups["growth"] + 1))),1 + (1- (1/float(active_powerups["growth"] + 1))))
+			base_damage += 10
+		"CamoPowerUp":
+			active_powerups["camo"] +=1
+			is_camouflaged = true
+			$AnimatedSprite2D.play("potato")
+			pass
+		"ThornsPowerUp":
+			
+			pass
+		
+	pass
 
 func recalculate_damage_multiplier() -> void:
 	damage_multiplier = 1.0
@@ -246,7 +255,12 @@ func recalculate_damage_multiplier() -> void:
 		var powerup = active_powerups[powerup_name]
 		if "damage_multiplier" in powerup:
 			damage_multiplier *= powerup.damage_multiplier
-
+			
+func regen_shield():
+	await get_tree().create_timer(10 + (30/(active_powerups["shield"] + 1))).timeout
+	shield_hits_remaining = max_shield
+	shield_node.visible = true
+	shieldChanged.emit()
 #MUTATION FUNCTIONS
 func show_powerup_choices() -> void:
 	var choices = all_powerups.duplicate()
@@ -258,7 +272,7 @@ func show_powerup_choices() -> void:
 	
 	var names: Array = []
 	for p in choices:
-		names.append(p.powerup_name)
+		names.append(p)
 	powerup_choice_ui.show_choices(names)
 
 func _on_powerup_card_selected(index: int) -> void:

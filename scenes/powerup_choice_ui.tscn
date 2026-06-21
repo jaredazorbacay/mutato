@@ -7,20 +7,49 @@ script/source = "extends CanvasLayer
 
 signal card_selected(index: int)
 
+const camo = preload(\"res://assets/sprites/powerups/camouflage-mutation.png\")
+const thorns = preload(\"res://assets/sprites/powerups/thorn-mutation.png\")
+const growth = preload(\"res://assets/sprites/powerups/growth-mutation.png\")
+const shield = preload(\"res://assets/sprites/powerups/shield-mutation.png\")
+const poison = preload(\"res://assets/sprites/powerups/backstab-mutation.png\")
+
+var all_powerups: Array[String] = [
+	\"GrowthPowerUp\",
+	\"ShieldPowerUp\",
+	\"PoisonWhipPowerUp\",
+	\"CamoPowerUp\",
+	\"ThornsPowerUp\",
+]
+
 @onready var card1: Button = $Panel/CardContainer/Card1
 @onready var card2: Button = $Panel/CardContainer/Card2
 @onready var card3: Button = $Panel/CardContainer/Card3
+
+var cards = []
 
 func _ready() -> void:
 	visible = false
 	card1.pressed.connect(func(): _on_card_pressed(0))
 	card2.pressed.connect(func(): _on_card_pressed(1))
 	card3.pressed.connect(func(): _on_card_pressed(2))
-
+	
+	
 func show_choices(powerup_names: Array) -> void:
+	cards = [card1, card2, card3]
 	card1.text = powerup_names[0]
 	card2.text = powerup_names[1]
 	card3.text = powerup_names[2]
+	
+	var id = 0
+	for card : Button in cards:
+		print(card)
+		match powerup_names[id]:
+			\"GrowthPowerUp\": card.icon = growth
+			\"ShieldPowerUp\": card.icon = shield
+			\"PoisonWhipPowerUp\": card.icon = poison
+			\"CamoPowerUp\": card.icon = camo
+			\"ThornsPowerUp\": card.icon = thorns
+		id+=1
 	visible = true
 
 func _on_card_pressed(index: int) -> void:
