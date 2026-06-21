@@ -1,11 +1,11 @@
-[gd_scene format=3 uid="uid://c3vffb5icscif"]
+[gd_scene format=3 uid="uid://05qks4xr3ike"]
 
-[ext_resource type="Script" uid="uid://jy4frhio1o02" path="res://scripts/main_menu.gd" id="1_ekxnf"]
-[ext_resource type="Texture2D" uid="uid://covvy4liqm8ur" path="res://assets/sprites/mbg.png" id="2_bqqt6"]
-[ext_resource type="FontFile" uid="uid://5os7njjy1wh" path="res://assets/fonts/Press_Start_2P/PressStart2P-Regular.ttf" id="3_wu84c"]
+[ext_resource type="Script" uid="uid://dpgd37fdivmad" path="res://scenes/game_over.gd" id="1_tbwuq"]
+[ext_resource type="Texture2D" uid="uid://covvy4liqm8ur" path="res://assets/sprites/mbg.png" id="2_racf3"]
+[ext_resource type="FontFile" uid="uid://5os7njjy1wh" path="res://assets/fonts/Press_Start_2P/PressStart2P-Regular.ttf" id="3_tbwuq"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vue75"]
-texture = ExtResource("2_bqqt6")
+texture = ExtResource("2_racf3")
 
 [sub_resource type="Animation" id="Animation_x8c23"]
 length = 10.0
@@ -20,6 +20,21 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Color(0.54509807, 1, 0.31764707, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_tbwuq"]
+resource_name = "died"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Label:theme_override_colors/font_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.54509807, 1, 0.31764707, 0), Color(1, 0.2, 0.14509805, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_6uw4y"]
@@ -57,12 +72,13 @@ tracks/0/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_8ln24"]
 _data = {
 &"RESET": SubResource("Animation_x8c23"),
+&"died": SubResource("Animation_tbwuq"),
 &"fade_in": SubResource("Animation_6uw4y"),
 &"text_fade_in": SubResource("Animation_bqqt6")
 }
 
-[node name="MainMenu" type="Node2D" unique_id=1497008133]
-script = ExtResource("1_ekxnf")
+[node name="GameOver" type="Node2D" unique_id=1497008133]
+script = ExtResource("1_tbwuq")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1491499562]
 
@@ -75,6 +91,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="Panel" parent="CanvasLayer/Panel" unique_id=1428300118]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -102,23 +119,23 @@ theme_override_constants/separation = 30
 layout_mode = 2
 theme_override_colors/font_color = Color(0.54509807, 1, 0.31764707, 0)
 theme_override_colors/font_outline_color = Color(0.23483622, 0.80123365, 0, 1)
-theme_override_fonts/font = ExtResource("3_wu84c")
+theme_override_fonts/font = ExtResource("3_tbwuq")
 theme_override_font_sizes/font_size = 100
-text = "MUTATO"
+text = "GAME OVER"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Panel/VBoxContainer/Label" unique_id=685912073]
 root_node = NodePath("../..")
 libraries/ = SubResource("AnimationLibrary_8ln24")
 
-[node name="Start" type="Button" parent="CanvasLayer/Panel/VBoxContainer" unique_id=20532816]
+[node name="Retry" type="Button" parent="CanvasLayer/Panel/VBoxContainer" unique_id=20532816]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
-text = "Start Game"
+text = "Back to Main Menu"
 
 [node name="Quit" type="Button" parent="CanvasLayer/Panel/VBoxContainer" unique_id=1170641702]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Quit"
 
-[connection signal="pressed" from="CanvasLayer/Panel/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="CanvasLayer/Panel/VBoxContainer/Retry" to="." method="_on_retry_pressed"]
 [connection signal="pressed" from="CanvasLayer/Panel/VBoxContainer/Quit" to="." method="_on_quit_pressed"]

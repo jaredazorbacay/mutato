@@ -20,6 +20,10 @@ func stop_mbgm() -> void:
 	if not mute:
 		$MBGM.stop()
 
+func stop_bgm() -> void:
+	if not mute:
+		$BGM.stop()
+
 func play_whip():
 	if not mute:
 		$WhipSound.play()
