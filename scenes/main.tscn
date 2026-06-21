@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dohdfo3is8htf"]
 
 [ext_resource type="Script" uid="uid://ckhkey6cdv04n" path="res://scripts/game.gd" id="1_jyhfs"]
+[ext_resource type="Script" uid="uid://bb8nsnjxo3wde" path="res://scripts/main.gd" id="1_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://da88ngh5erprd" path="res://scenes/player.tscn" id="2_0wfyh"]
 [ext_resource type="Texture2D" uid="uid://cr6wu8v35s35m" path="res://assets/sprites/Tile_Set_New.png" id="3_sugp2"]
 
@@ -54,19 +55,22 @@ physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_jyhfs")
 
 [node name="Main" type="Node" unique_id=1810310620]
+script = ExtResource("1_tbgi4")
+
+[node name="GameNode" type="Node" parent="." unique_id=1160394693]
 script = ExtResource("1_jyhfs")
 
-[node name="Player" parent="." unique_id=1883848433 instance=ExtResource("2_0wfyh")]
+[node name="Player" parent="GameNode" unique_id=1883848433 instance=ExtResource("2_0wfyh")]
 position = Vector2(1, -2)
 scale = Vector2(1, 1)
 collision_layer = 2
 collision_mask = 7
 
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1512592516]
+[node name="Camera2D" type="Camera2D" parent="GameNode/Player" unique_id=1512592516]
 position = Vector2(0, 5)
 zoom = Vector2(2.5, 2.5)
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 
-[node name="Hallway" type="TileMapLayer" parent="." unique_id=107319385]
+[node name="Hallway" type="TileMapLayer" parent="GameNode" unique_id=107319385]
 tile_set = SubResource("TileSet_0wfyh")

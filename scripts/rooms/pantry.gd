@@ -9,6 +9,7 @@ var right_door_open: bool
 var left_door_open: bool
 var top_door_open: bool
 var bottom_door_open: bool
+var spawn_points = []
 
 # position in world blocks
 var map_coords: Vector2i
@@ -22,10 +23,45 @@ func _ready() -> void:
 	left_door = Vector2i(0,8)
 	top_door = Vector2i(9,0)
 	bottom_door = Vector2i(10,17)
+	
+	add_spawn_zone(1,5,24,16)
+	add_spawn_zone(1,2,7,10)
+	add_spawn_zone(5,9,1,6)
+	add_spawn_zone(7,12,7,10)
+	add_spawn_zone(15,17,7,14)
+	
+	spawn_enemies(5)
 
 func set_coords(coords: Vector2i):
 	map_coords = coords
 	
+func spawn_enemies(count):
+	const scientist_scene = preload("res://scenes/scientist.tscn")
+	spawn_points.shuffle()
+	for i in count:
+		var location = spawn_points.pick_random()
+		var enemy = scientist_scene.instantiate()
+		enemy.z_index = 10
+		add_child(enemy)
+		enemy.global_position = global_position + Vector2(
+			location.x * 32, location.y *32
+		)
+		spawn_points.erase(location)
+	
+	var location = spawn_points.pick_random()
+	var enemy = scientist_scene.instantiate()
+	enemy.hasFertilizer = true
+	enemy.z_index = 10
+	add_child(enemy)
+	enemy.global_position = global_position + Vector2(
+		location.x * 32, location.y *32
+	)
+	spawn_points.erase(location)
 
 func open_door(direction : String):
 	get_node(direction + "_door").queue_free()
+	
+func add_spawn_zone(initX, finX, initY, finY):
+	for x in range(initX + 1, finX - 1):
+		for y in range(initY+ 1, finY - 1):
+			spawn_points.append(Vector2i(x,y))

@@ -1,15 +1,17 @@
 extends CharacterBody2D
 
 
-@onready var player = $/root/Main/Player
+@onready var player = $/root/Main/GameNode/Player
 var speed : int
 var health: int
 var bullet_damage: int
 var cooldown: float
 var shooting: bool
 var bullet_scene = preload("res://scenes/scientist_bullet.tscn")
+var fertilizer_scene = preload("res://scenes/items/fertilizer.tscn")
 var is_poisoned: bool
 var facing_direction: Vector2
+var hasFertilizer = false
 
 const PoisonPulseShader = preload("res://scenes/poison_pulse.gdshader")
 
@@ -44,6 +46,7 @@ func take_damage(damage: int, attacker_position: Vector2 = Vector2.ZERO) -> void
 	Explode()
 	
 	if (health <= 0):
+		drops()
 		AudioController.play_death()
 		queue_free()
 	else:
@@ -55,6 +58,8 @@ func Explode():
 	_particle.rotation = global_rotation
 	_particle.emitting = true
 	get_tree().current_scene.add_child(_particle)
+		
+		
 
 func _physics_process(delta: float) -> void:
 	var avoiding = false
@@ -142,3 +147,9 @@ func apply_poison(damage_per_tick: int, tick_count: int, tick_interval: float) -
 	
 	is_poisoned = false
 	$AnimatedSprite2D.material = null
+
+func drops():
+	if hasFertilizer:
+		var fertilizer_object = fertilizer_scene.instantiate()
+		get_tree().current_scene.add_child(fertilizer_object)
+		fertilizer_object.position = global_position

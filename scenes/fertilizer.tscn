@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://cuycrfdgugs8h"]
+[gd_scene format=3 uid="uid://dc2yy4oc0cf61"]
 
-[ext_resource type="Script" uid="uid://dds0jgqbpvqqy" path="res://scripts/fertilizer.gd" id="1_2pwl4"]
+[ext_resource type="Script" uid="uid://dds0jgqbpvqqy" path="res://scripts/powerups/fertilizer.gd" id="1_2pwl4"]
 [ext_resource type="Texture2D" uid="uid://dru0if4buy150" path="res://assets/sprites/fertilizer.png" id="2_lxjq7"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_063f5"]

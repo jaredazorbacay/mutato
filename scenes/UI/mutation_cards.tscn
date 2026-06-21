@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://c2r2y5iysjlsp"]
+
+[ext_resource type="Texture2D" uid="uid://sejmscepdr8q" path="res://assets/ui/Cards-Sheet.png" id="2_ayxc8"]
+[ext_resource type="Script" uid="uid://os62tiv1m04a" path="res://scripts/ui/mutation_cards.gd" id="2_q5s7t"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_shlu6"]
+load_path = "res://.godot/imported/Cards-Sheet.png-5ef99e7d9a97420a1f100289e68cc882.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q5s7t"]
+atlas = SubResource("CompressedTexture2D_shlu6")
+region = Rect2(0, 0, 48, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_phdo7"]
+atlas = ExtResource("2_ayxc8")
+region = Rect2(0, 0, 48, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ayxc8"]
+atlas = ExtResource("2_ayxc8")
+region = Rect2(48, 0, 48, 64)
+
+[node name="Cards" type="Control" unique_id=315564523]
+layout_mode = 3
+anchor_top = 0.013
+anchor_bottom = 0.013
+offset_left = -1.0000305
+offset_top = -5.424
+offset_right = 308.99997
+offset_bottom = 169.576
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4, 4)
+
+[node name="Left" type="TextureButton" parent="." unique_id=1606967244]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.42600003
+anchor_top = 0.423
+anchor_right = 0.42600003
+anchor_bottom = 0.423
+offset_left = -267.39334
+offset_top = -111.02501
+offset_right = -219.39334
+offset_bottom = -47.02501
+texture_normal = SubResource("AtlasTexture_q5s7t")
+texture_pressed = SubResource("AtlasTexture_phdo7")
+texture_hover = SubResource("AtlasTexture_ayxc8")
+script = ExtResource("2_q5s7t")
+
+[node name="Middle" type="TextureButton" parent="." unique_id=867534273]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.42600003
+anchor_top = 0.423
+anchor_right = 0.42600003
+anchor_bottom = 0.423
+offset_left = -182.39336
+offset_top = -112.35834
+offset_right = -134.39336
+offset_bottom = -48.358337
+texture_normal = SubResource("AtlasTexture_q5s7t")
+texture_pressed = SubResource("AtlasTexture_phdo7")
+texture_hover = SubResource("AtlasTexture_ayxc8")
+script = ExtResource("2_q5s7t")
+
+[node name="Right" type="TextureButton" parent="." unique_id=977855173]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.42600003
+anchor_top = 0.423
+anchor_right = 0.42600003
+anchor_bottom = 0.423
+offset_left = -98.39336
+offset_top = -113.35834
+offset_right = -50.393356
+offset_bottom = -49.358337
+texture_normal = SubResource("AtlasTexture_q5s7t")
+texture_pressed = SubResource("AtlasTexture_phdo7")
+texture_hover = SubResource("AtlasTexture_ayxc8")
+script = ExtResource("2_q5s7t")
+
+[connection signal="pressed" from="Left" to="Left" method="_on_texture_button_pressed"]
+[connection signal="pressed" from="Middle" to="Middle" method="_on_texture_button_pressed"]
+[connection signal="pressed" from="Right" to="Right" method="_on_texture_button_pressed"]
