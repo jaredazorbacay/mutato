@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="GrowthPowerUp" format=3 uid="uid://x5rtmmxn58ty"]
+
+[ext_resource type="Script" uid="uid://cdvwukoc0o12c" path="res://scripts/powerups/growth_powerup.gd" id="1_n305h"]
+
+[resource]
+script = ExtResource("1_n305h")
+scale_multiplier = 2.0
+powerup_name = "growth"
+duration = 15.0
+metadata/_custom_type_script = "uid://cdvwukoc0o12c"

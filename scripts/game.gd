@@ -1,8 +1,7 @@
 extends Node
 
-@onready var player = $/root/Main/Player
+@onready var player = $/root/Main/GameNode/Player
 const scientist_scene = preload("res://scenes/scientist.tscn")
-#const saber_scientist_scene = preload("res://scenes/saber_scientist.tscn")
 const GRID_SIZE = 32
 #const pantry_scene = preload("res://scenes/rooms/main_laboratory.tscn")
 var enemies : int 
@@ -23,35 +22,27 @@ func _ready() -> void:
 		preload("res://scenes/rooms/room1.tscn"),
 		preload("res://scenes/rooms/room2.tscn"),
 		preload("res://scenes/rooms/room3.tscn"),
-		preload("res://scenes/rooms/boss_room.tscn"),
 	]
 	enemies = 0
 	var spawn_point : Vector2i = build_level()
-	print(spawn_point)
 	player.position = spawn_point + Vector2i(100, 100)
+	
 	pass # Replace with function body.
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if enemies < 2:
-		if randf_range(0, 1) > 0.5:
-			var radius = randi_range(500,1000)
-			#var radius = randi_range(0,0)
-			var scientist : CharacterBody2D = scientist_scene.instantiate()
-			#var saber_scientist : CharacterBody2D = saber_scientist_scene.instantiate()
-			var x_offset = randi_range(0, radius) * [-1, 1].pick_random()
-			var y_offset = sqrt(pow(radius, 2) - pow(x_offset, 2)) * [-1, 1].pick_random()
-			get_tree().current_scene.add_child(scientist)
-			scientist.global_position = player.global_position + Vector2(
-				-x_offset, -y_offset
-			)
-			enemies+=1
-			#get_tree().current_scene.add_child(saber_scientist)
-			#saber_scientist.global_position = player.global_position + Vector2(
+	#if enemies < 2:
+		#if randf_range(0, 1) > 0.5:
+			#var radius = randi_range(500,1000)
+			#var scientist : CharacterBody2D = scientist_scene.instantiate()
+			#var x_offset = randi_range(0, radius) * [-1, 1].pick_random()
+			#var y_offset = sqrt(pow(radius, 2) - pow(x_offset, 2)) * [-1, 1].pick_random()
+			#add_child(scientist)
+			#scientist.global_position = player.global_position + Vector2(
 				#-x_offset, -y_offset
 			#)
-			#enemies+=2
+			#enemies+=1
+	pass
 			
 func build_level() -> Vector2i:
 	var room_map_grid_size = 50 
@@ -86,6 +77,7 @@ func build_level() -> Vector2i:
 		isStuck = !room_found
 	
 	var room_scenes = []
+	var level = 0
 	for room in room_sequence:
 		var currentX = 0
 		var currentY = 0
@@ -96,7 +88,10 @@ func build_level() -> Vector2i:
 		room_scene.set_coords(room)
 		room_scene.tile_position_in_world = Vector2i(currentX, currentY)
 		room_scene.position = Vector2i(currentX, currentY) * GRID_SIZE
-		get_tree().current_scene.add_child(room_scene)
+		add_child(room_scene)
+		if (level != 0):
+			room_scene.spawn_enemies(5 + int(level/3), level)
+		level += 1
 		
 		if room_scenes.size() > 0:
 			#get last room and draw a halway
@@ -121,6 +116,51 @@ func build_level() -> Vector2i:
 			
 		#record room positions
 		room_scenes.append(room_scene)
+	
+	#Dead end rooms
+	var dead_level = 1
+	for room in room_scenes:
+		var available_neighbors = 	[Vector2i(room.map_coords.x+1, room.map_coords.y), 
+									Vector2i(room.map_coords.x-1, room.map_coords.y),
+									Vector2i(room.map_coords.x, room.map_coords.y+1),
+									Vector2i(room.map_coords.x, room.map_coords.y-1)]
+		available_neighbors.shuffle()
+		for neighbor in available_neighbors:
+			if rooms.has(neighbor):
+				rooms.erase(neighbor)
+				
+				var currentX = 0
+				var currentY = 0
+				var neighbor_room_scene : TileMapLayer = scene_for_rooms.pick_random().instantiate(2)
+				neighbor_room_scene.z_index = -10
+				currentX = randi_range(10, 30) + (neighbor.x * room_map_grid_size)
+				currentY = randi_range(0, 25) + (neighbor.y * room_map_grid_size)
+				neighbor_room_scene.set_coords(neighbor)
+				neighbor_room_scene.tile_position_in_world = Vector2i(currentX, currentY)
+				neighbor_room_scene.position = Vector2i(currentX, currentY) * GRID_SIZE
+				add_child(neighbor_room_scene)
+				neighbor_room_scene.spawn_enemies(5 + int(dead_level/3), dead_level)
+				
+				if (neighbor.x > room.map_coords.x): #new room is in right
+					draw_hallway( room.tile_position_in_world + room.right_door, Vector2i(currentX,currentY) + neighbor_room_scene.left_door, "HORIZONTAL")
+					room.open_door("right")
+					neighbor_room_scene.open_door("left")
+				elif (neighbor.x < room.map_coords.x): #new room is in left
+					draw_hallway(Vector2i(currentX,currentY) + neighbor_room_scene.right_door,  room.tile_position_in_world + room.left_door, "HORIZONTAL")
+					room.open_door("left")
+					neighbor_room_scene.open_door("right")
+				elif (neighbor.y > room.map_coords.y): #new room is in bottom
+					draw_hallway( room.tile_position_in_world + room.bottom_door, Vector2i(currentX,currentY) + neighbor_room_scene.top_door, "VERTICAL")
+					room.open_door("bottom")
+					neighbor_room_scene.open_door("top")
+				else: #new room is in top
+					draw_hallway( Vector2i(currentX,currentY) + neighbor_room_scene.bottom_door, room.tile_position_in_world + room.top_door, "VERTICAL")
+					room.open_door("top")
+					neighbor_room_scene.open_door("bottom")
+				
+				print(room.map_coords, neighbor)
+				pass
+		dead_level +=1
 	return room_scenes[0].position
 		
 		

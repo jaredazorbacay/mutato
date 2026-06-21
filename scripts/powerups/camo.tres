@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CamoPowerUp" format=3 uid="uid://bo6ogp7qq3kpg"]
+
+[ext_resource type="Script" uid="uid://x3w31f8g1dhu" path="res://scripts/powerups/camo_powerup.gd" id="1_2qmsf"]
+
+[resource]
+script = ExtResource("1_2qmsf")
+powerup_name = "camo"
+duration = 10.0
+metadata/_custom_type_script = "uid://x3w31f8g1dhu"
