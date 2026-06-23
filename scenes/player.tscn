@@ -405,6 +405,15 @@ shader_parameter/pulse_frequency = 2.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_fjrip"]
 radius = 30.001852
 
+[sub_resource type="Gradient" id="Gradient_fjrip"]
+offsets = PackedFloat32Array(0.06490385, 0.7235577)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_smehm"]
+gradient = SubResource("Gradient_fjrip")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
 [node name="Player" type="CharacterBody2D" unique_id=1883848433 groups=["player"]]
 z_index = 10
 scale = Vector2(3, 3)
@@ -438,3 +447,9 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ThornArea" unique_id=1207567091]
 shape = SubResource("CircleShape2D_fjrip")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=410677304]
+color = Color(0.8784314, 0.87058824, 0.85882354, 0.972549)
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_smehm")
+texture_scale = 3.0

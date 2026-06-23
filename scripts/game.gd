@@ -143,7 +143,7 @@ func build_level() -> Vector2i:
 				
 				var currentX = 0
 				var currentY = 0
-				var neighbor_room_scene : TileMapLayer = scene_for_rooms.pick_random().instantiate(2)
+				var neighbor_room_scene : TileMapLayer = scene_for_rooms.pick_random().instantiate()
 				neighbor_room_scene.z_index = -10
 				currentX = randi_range(10, 30) + (neighbor.x * room_map_grid_size)
 				currentY = randi_range(0, 25) + (neighbor.y * room_map_grid_size)
